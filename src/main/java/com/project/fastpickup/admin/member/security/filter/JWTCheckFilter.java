@@ -32,6 +32,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
+        log.info("request.getMethod"+request.getMethod());
         // PreFlight
         if (request.getMethod().equals("OPTIONS")) {
             return true;
@@ -39,6 +40,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         // 호출 하는 경로를 Check
         String path = request.getRequestURI();
+        log.info("path: "+path);
 
         // Login 이면 Filter 검증 안한다
         if (path.equals("/api/member/login")
@@ -47,9 +49,18 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if(path.startsWith("/kakaoPay")) {
+            return true;
+        }
+
         if (path.startsWith("/swagger-ui/")) {
             return true;
         }
+
+        if(path.startsWith("/joon")) {
+            return true;
+        }
+        
 
         // http://localhost:8081/login/oauth2/kakao
         // kakao login true
