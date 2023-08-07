@@ -1,7 +1,7 @@
 package com.project.fastpickup.admin.product.dto;
 
 /*
- * Date   : 2023.07.26
+ * Date   : 2023.08.07
  * Author : 조상희
  * E-mail : jo_sh_1028@naver.com
  */

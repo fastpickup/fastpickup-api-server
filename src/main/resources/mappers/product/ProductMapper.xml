@@ -29,52 +29,12 @@
   </resultMap>
   <!-- //Read Product File (resultMap) -->
 
-
-  <!-- Create Product ProductMapper id = "createProduct" -->
-  <insert id="createProduct">
-    insert into tbl_product
-    (productName, productContent, productPrice, isRecommend, sno)
-    values (#{productName}, #{productContent}, #{productPrice}, #{isRecommend}, #{sno})
-    <selectKey resultType="long" keyProperty="pno" order="AFTER">
-      select last_insert_id()
-    </selectKey>
-  </insert>
-
-  <!-- List Product ProductMapper id = "getList" -->
-  <select id="getList" resultType="ProductListDTO">
-    select prdt.pno, prdt.productName, prdt.productPrice, prdt.registDate, prdt.viewCount,
-           prdt.likeCount, prdt.isRecommend, prdt.isDeletedProduct, prdt.storeName, prdt.sno,
-           prdt.categoryName, concat(tpi.uuid,'_',tpi.fileName) as fileName, if(prdt.isRecommend = 999999999, 1, 0) as recStatus
-    from (
-            select tp.pno, tp.productName, tp.productPrice, tp.registDate, tp.viewCount,
-                   tp.likeCount, tp.isRecommend, tp.isDeletedProduct, ts.storeName, ts.sno,
-                   tpc.categoryName
-            from tbl_product tp
-              left outer join tbl_store ts on ts.sno = tp.sno
-              left outer join tbl_product_category tpc on tpc.pno = tp.pno
-            where tp.pno > 0 and tp.isDeletedProduct = true
-            <if test="keyword != null and types != null">
-              <trim prefix="and (" prefixOverrides="or" suffix=")">
-                <foreach collection="types" item="type" separator=" or ">
-                  <if test='type == "p"'>
-                    tp.productName like concat('%', #{keyword}, '%')
-                  </if>
-                  <if test='type == "s"'>
-                    ts.storeName like concat('%', #{keyword}, '%')
-                  </if>
-                  <if test='type == "c"'>
-                    tpc.categoryName like concat('%', #{keyword}, '%')
-                  </if>
-                </foreach>
-              </trim>
-            </if>
-            order by tp.pno desc
-            limit #{skip}, #{size}
-        ) as prdt
-    left outer join tbl_product_image tpi
-    on tpi.pno = prdt.pno
-    and (tpi.ord = 0 or tpi.ord is null)
-    order by prdt.isRecommend desc, prdt.pno desc
+  <!-- Category List ProductMapper id = "getCateList" -->
+  <select id="getCateList">
+    select distinct tpc.categoryName
+    from tbl_product_category tpc
+    order by tpc.categoryName asc
+    limit 10
   </select>
 
   <!-- Store List Product ProductMapper id = "getStoreList" -->
@@ -96,33 +56,6 @@
      on tpi.pno = prdt.pno
      and (tpi.ord = 0 or tpi.ord is null)
     order by prdt.isRecommend desc, prdt.pno desc
-  </select>
-
-  <!-- List Total Count Product ProductMapper id = "listCount" -->
-  <select id="listCount">
-    select count(*)
-    from
-    (select tp.pno
-      from tbl_product tp
-      left outer join tbl_store ts on ts.sno = tp.sno
-      left outer join tbl_product_category tpc on tpc.pno = tp.pno
-      where tp.pno > 0 and tp.isDeletedProduct = true
-      <if test="keyword != null and types != null">
-        <trim prefix="and (" prefixOverrides="or" suffix=")">
-          <foreach collection="types" item="type" separator=" or ">
-            <if test='type == "p"'>
-              tp.productName like concat('%', #{keyword}, '%')
-            </if>
-            <if test='type == "s"'>
-              ts.storeName like concat('%', #{keyword}, '%')
-            </if>
-            <if test='type == "c"'>
-              tpc.categoryName like concat('%', #{keyword}, '%')
-            </if>
-          </foreach>
-        </trim>
-      </if>
-      limit #{countEnd}) prdt
   </select>
 
   <!-- Store List Total Count Product ProductMapper id = "listStoreCount" -->
@@ -148,23 +81,6 @@
     left outer join tbl_product_image tpi on tpi.pno = tp.pno
     where tp.pno = #{pno}
   </select>
-
-  <!-- Delete Product ProductMapper id = "deleteProduct" -->
-  <update id="deleteProduct">
-    update tbl_product tp
-    set
-      tp.productName = '', tp.productContent = '', tp.productPrice = 0, tp.registDate = null, tp.updateDate = now(),
-      tp.viewCount = 0, tp.viewCount = 0, tp.isRecommend = 0, tp.isDeletedProduct = false
-    where tp.pno = #{pno}
-  </update>
-
-  <!-- Update Product ProductMapper id = "updateProduct" -->
-  <update id="updateProduct">
-    update tbl_product tp
-    set
-      tp.productName = #{productName}, tp.productContent = #{productContent}, tp.productPrice = #{productPrice}, tp.updateDate = now(), tp.isRecommend = #{isRecommend}
-    where tp.pno = #{pno}
-  </update>
 
   <!-- Update Product Views ProductMapper id = "viewCount" -->
   <update id="viewCount">
