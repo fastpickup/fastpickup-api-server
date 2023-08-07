@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ReviewMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.review.mappers.ReviewMapper">
+   
+
+   <!-- 맴버 리뷰 작성 -->
+   <insert id ="registReview">
+
+    insert into tbl_review(sno, ono ,email, reviewTitle, reviewContent) 
+            values (#{sno}, #{ono}, #{email}, #{reviewTitle}, #{reviewContent})
+            
+        <selectKey resultType="long" keyProperty="rno" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+   </insert>
+
+  <!-- 맴버 리뷰는 rno = gno -->
+  <update id="updateGno">
+      update tbl_review set gno = #{rno} where rno = #{rno}
+  </update>
+
+  <!-- END 맴버 리뷰 작성 -->
+
+   <!-- 맴버 리뷰 리스트 -->
+   <select id = "getReviewMemberList" resultType="com.project.fastpickup.admin.review.dto.ReviewListDTO">
+
+        select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
+            from tbl_review r left outer join tbl_store s on r.sno = s.sno
+		    left outer join tbl_order o on r.ono = o.ono
+		    left outer join tbl_member m on m.email = o.email
+		    left outer join tbl_product p on o.pno = p.pno
+		    left outer join tbl_product_image pi on p.pno = pi.pno
+        where r.rno = r.gno and r.isDeleted = false and r.email = #{email} and pi.ord = 0
+
+            <if test="pr.keyword != null and pr.types != null">
+              <trim prefix="and (" prefixOverrides="or" suffix=")">
+                <foreach collection="pr.types" item="type" separator=" or ">
+                  <if test='type == "p"'>
+                    p.productName like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "s"'>
+                    s.storeName like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "t"'>
+                    r.reviewTitle like concat('%', #{pr.keyword}, '%')
+                  </if>
+                </foreach>
+              </trim>
+            </if>
+
+        order by r.reviewDate desc
+        limit #{pr.skip}, #{pr.size}
+
+   </select>
+
+    <!-- 페이지를 위한 카운트 -->
+    <!-- 테스트 진행 할것 -->
+   <select id ="reviewMemberListCount" resultType = "int">
+      select(*) count from
+        (select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
+            from tbl_review r left outer join tbl_store s on r.sno = s.sno
+		    left outer join tbl_order o on r.ono = o.ono
+		    left outer join tbl_member m on m.email = o.email
+		    left outer join tbl_product p on o.pno = p.pno
+		    left outer join tbl_product_image pi on p.pno = pi.pno
+        where r.rno = r.gno and r.isDeleted = false and r.email = #{email} and pi.ord = 0
+
+            <if test="pr.keyword != null and pr.types != null">
+              <trim prefix="and (" prefixOverrides="or" suffix=")">
+                <foreach collection="pr.types" item="type" separator=" or ">
+                  <if test='type == "p"'>
+                    p.productName like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "s"'>
+                    s.storeName like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "t"'>
+                    r.reviewTitle like concat('%', #{pr.keyword}, '%')
+                  </if>
+                </foreach>
+              </trim>
+            </if>
+            limit #{pr.countEnd}) review
+   </select>
+
+   <!-- END 맴버 리뷰 리스트 테스트 -->
+
+   <!-- 가맹점 전체 리뷰 리스트 -->
+   <select id = "getReviewList" resultType="com.project.fastpickup.admin.review.dto.ReviewListDTO">
+      select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
+            from tbl_review r left outer join tbl_store s on r.sno = s.sno
+		    left outer join tbl_order o on r.ono = o.ono
+		    left outer join tbl_member m on m.email = o.email
+		    left outer join tbl_product p on o.pno = p.pno
+		    left outer join tbl_product_image pi on p.pno = pi.pno
+        where and r.isDeleted = false and r.sno = #{sno} and pi.ord = 0
+
+            <if test="pr.keyword != null and pr.types != null">
+              <trim prefix="and (" prefixOverrides="or" suffix=")">
+                <foreach collection="pr.types" item="type" separator=" or ">
+                  <if test='type == "p"'>
+                    p.productName like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "e"'>
+                    m.email like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "t"'>
+                    r.reviewTitle like concat('%', #{pr.keyword}, '%')
+                  </if>
+                </foreach>
+              </trim>
+            </if>
+
+        order by r.reviewDate desc
+        limit #{pr.skip}, #{pr.size}
+   </select>
+
+   <!-- 맴버 리뷰 상세 -->
+      <resultMap id="reviewMap" type="com.project.fastpickup.admin.review.dto.ReviewReadDTO">
+        <id property="rno" column="rno"/>
+        <result property="ono" column="ono"/>
+        <result property="sno" column="sno"/>
+        <result property="storeName" column="storeName"/>
+        <result property="pno" column="pno"/>
+        <result property="productName" column="productName"/>
+        <result property="email" column="email"/>
+        <result property="reviewTitle" column="reviewTitle"/>
+        <result property="reviewContent" column="reviewContent"/>
+        <result property="reviewDate" column="reviewDate"/>
+        <result property="isDeleted" column="isDeleted"/>
+        <collection property="fileNames" resultMap="reviewFileMap"/>
+    </resultMap>
+
+    <resultMap type="string" id="reviewFileMap">
+        <result column="fileNames"/>
+    </resultMap>
+
+   <select id ="getReviewRead" resultMap ="reviewMap">
+      select r.rno, o.ono ,s.sno, s.storeName, p.pno, p.productName, r.email, r.reviewTitle, r.reviewContent, concat(ri.uuid,'_',ri.fileName) as fileNames, r.reviewDate, r.isDeleted 
+        from tbl_review r left outer join tbl_store s on r.sno = s.sno
+		      left outer join tbl_review_img ri on r.rno = ri.rno
+		      left outer join tbl_order o on r.ono = o.ono
+		      left outer join tbl_member m on m.email = o.email
+		      left outer join tbl_product p on o.pno = p.pno
+        where r.rno = #{rno} and r.isDeleted = false and r.email = #{email} and r.rno = r.gno
+   </select>
+  <!-- END 맴버 리뷰 상세 -->
+
+  <!-- 리뷰 삭제 -->
+  <update id ="removeReview">
+    update tbl_review set isDeleted = true where rno = #{rno}
+  </update>
+  <!-- END 리뷰 삭제 -->
+
+  <!-- 리뷰 수정 -->
+  <update id = "updateReveiw">
+    update tbl_review set reviewContent = #{reviewContent}, reviewTitle = #{reviewTitle}
+    where rno = #{rno}
+  </update>
+
+</mapper>

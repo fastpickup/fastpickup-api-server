@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- QnaMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.qna.mappers.QnaReplyMapper">
+
+<!--    &lt;!&ndash;  create  &ndash;&gt;-->
+<!--    <insert id="createQnaReply" parameterType="com.project.fastpickup.admin.qna.dto.reply.QnaReplyRegistDTO">-->
+<!--        insert into tbl_qna_reply-->
+<!--        (qno, reply, email)-->
+<!--        values (#{qno}, #{reply}, #{email})-->
+<!--    </insert>-->
+
+    <!--  read  -->
+    <select id="readQnaReply" parameterType="com.project.fastpickup.admin.qna.dto.reply.QnaReplyReadDTO">
+        select rno, email, reply, replyDate
+        from tbl_qna_reply
+        where qno = #{qno}
+    </select>
+
+<!--    &lt;!&ndash;  update read  &ndash;&gt;-->
+<!--    <select id="readQnaReplyRno" parameterType="com.project.fastpickup.admin.qna.dto.reply.QnaReplyReadDTO">-->
+<!--        select qno, rno, email, reply, replyDate-->
+<!--        from tbl_qna_reply-->
+<!--        where rno = #{rno}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;  update  &ndash;&gt;-->
+<!--    <update id="updateQnaReply" parameterType="com.project.fastpickup.admin.qna.dto.reply.QnaReplyUpdateDTO">-->
+<!--        update tbl_qna_reply-->
+<!--        set rno = #{rno}, qno = #{qno}, reply = #{reply}-->
+<!--        where rno = #{rno}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash;  delete  &ndash;&gt;-->
+<!--    <delete id="deleteQnaReply" parameterType="long">-->
+<!--        delete from tbl_qna_reply-->
+<!--        where rno = #{rno}-->
+<!--    </delete>-->
+
+<!--    &lt;!&ndash; reply count   &ndash;&gt;-->
+<!--    <select id="replyCount">-->
+<!--        select count(rno) from tbl_qna_reply-->
+<!--        where qno = #{qno}-->
+<!--    </select>-->
+
+</mapper>

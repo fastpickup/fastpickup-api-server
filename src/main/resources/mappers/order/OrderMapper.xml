@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Date   : 2023.08.03, Author : 권성준, E-mail : thistrik@naver.com -->
+<!-- OrderMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.order.mappers.OrderMapper">
+
+    <!-- OrderMapper id = "createOrder" -->
+    <insert id="createOrder" parameterType="com.project.fastpickup.admin.order.dto.order.OrderCreateDTO">
+        INSERT INTO 
+        tbl_order 
+        (orderCount, email, sno, pno)
+        VALUES(#{orderCount}, #{email}, #{sno}, #{pno})
+        <selectKey resultType="long" keyProperty="ono" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <!-- OrderMapper id = "duplicateOno" -->
+    <select id="duplicateOno" parameterType="long">
+        SELECT * FROM 
+        tbl_order
+        WHERE ono = #{ono}
+    </select>
+
+    <!-- OrderMapper id = "listOrderMyHistory" -->
+    <select id="listOrderMyHistory" parameterType="com.project.fastpickup.admin.util.PageRequestDTO">
+        SELECT 
+        m.memberName,
+        m.memberPhone,
+        m.email,
+        o.ono,
+        o.pno,
+        o.sno,
+        o.registDate,
+        p.productName,
+        p.productPrice,
+        concat(pi.uuid, '_', pi.fileName)   as fileName
+        FROM tbl_member m
+        LEFT OUTER JOIN tbl_order 		    o on o.email = m.email
+        LEFT OUTER JOIN tbl_order_history   h on h.ono = o.ono
+        LEFT OUTER JOIN  tbl_product 	    p on p.pno = o.pno
+        LEFT OUTER JOIN  tbl_product_image pi on pi.pno = p.pno
+        WHERE m.email = #{email} 
+          AND pi.ord = 0
+        LIMIT #{pr.skip}, #{pr.size}
+    </select>    
+
+    <!-- OrderMapper id = "total" -->
+    <select id="total" resultType="int">
+     SELECT COUNT(*)
+        FROM(
+            SELECT 
+            o.ono,
+            s.sno
+            FROM tbl_order             o
+            LEFT OUTER JOIN tbl_store  s ON o.sno = s.sno
+            LEFT OUTER JOIN tbl_member m ON s.email = m.email
+            WHERE o.ono > 0
+        LIMIT #{countEnd}
+        ) as tbl_order
+    </select>
+
+    <!-- OrderMapper id = "readOrderMyHistroy" -->
+    <select id="readOrderMyHistory" parameterType="com.project.fastpickup.admin.order.dto.order.OrderDTO">
+        SELECT 
+        m.memberName,
+        m.email,
+        o.ono,
+        o.pno,
+        o.sno,
+        o.orderCount,
+        s.storeName,
+        s.storePhone,
+        s.storeAddress,
+        o.registDate,
+        h.orderStatus,
+        o.orderCount * p.productPrice as totalPrice,
+        p.productName,
+        p.productPrice,
+        concat(pi.uuid, '_', pi.fileName) as fileName
+        FROM tbl_member m
+        LEFT OUTER JOIN tbl_order 		  o on o.email = m.email
+        LEFT OUTER JOIN tbl_order_history h on h.ono = o.ono
+        LEFT OUTER JOIN tbl_product 	  p on p.pno = o.pno
+        LEFT OUTER JOIN tbl_product_image pi on pi.pno = p.pno
+        LEFT OUTER JOIN tbl_store 		  s on s.sno = o.sno
+        WHERE o.ono = #{ono} 
+        AND pi.ord = 0;
+    </select>
+
+</mapper>

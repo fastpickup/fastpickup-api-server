@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ProductMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.product.mappers.FileMapper">
+  <!-- Create File FileMapper id = "createImage" -->
+  <insert id="createImage">
+    insert into tbl_product_image (uuid, fileName, pno, ord) values
+    <foreach collection="list" item="item" separator=",">
+      ( #{item.uuid}, #{item.fileName}, #{item.pno}, #{item.ord} )
+    </foreach>
+  </insert>
+
+  <!-- Delete File FileMapper id = "createImage" -->
+  <delete id="deleteImage">
+    delete from tbl_product_image where pno = #{pno}
+  </delete>
+</mapper>

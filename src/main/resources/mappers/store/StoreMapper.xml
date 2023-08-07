@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Date   : 2023.08.03, Author : 권성준, E-mail : thistrik@naver.com -->
+<!-- StoreMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.store.mappers.StoreMapper">
+
+
+<!-- StoreMapper id = "readStore" -->
+<select id="readStore" parameterType="long">
+ SELECT 
+  s.sno,
+  s.storeNumber,
+  s.storeAddress,
+  s.email,
+  s.storePhone,
+  s.storeName
+FROM 
+  tbl_store AS s
+WHERE s.sno = #{sno};
+</select>
+
+<!-- StoreMapper id = "listStoreForCategory" -->
+<select id="listStoreForCategory"  parameterType="com.project.fastpickup.admin.util.PageRequestDTO">
+  SELECT 
+  c.cno,
+  c.pno,
+  p.sno,
+  c.categoryName,
+  concat(pi.uuid, '_', pi.fileName)   AS fileName
+  FROM tbl_product_category c
+  LEFT OUTER JOIN tbl_product             p on c.pno = p.pno 
+  LEFT OUTER JOIN tbl_product_image       pi on pi.pno = p.pno
+  WHERE c.categoryName  = #{categoryName} 
+  AND   pi.ord = 0
+  ORDER BY p.sno DESC , c.cno DESC, p.sno DESC 
+  LIMIT #{pr.skip}, #{pr.size}
+</select>
+
+
+<!-- StoreMapper id = "total" -->
+<select id="total" resultType="int">
+  SELECT COUNT(*)
+  FROM (
+    SELECT * FROM 
+    tbl_store
+    WHERE sno > 0
+  LIMIT #{countEnd}
+  ) as tbl_store
+</select>
+
+
+<!-- StoreMapper id = "duplicateSno" -->
+<select id="duplicateSno" parameterType="long">
+  SELECT * FROM 
+  tbl_store 
+  WHERE sno = #{sno}
+</select>
+
+
+</mapper>

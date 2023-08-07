@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Date   : 2023.07.26, Author : 권성준, E-mail : thistrik@naver.com -->
+<!-- MemberMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.member.mappers.MemberMapper">
+
+ <resultMap id="memberMap" type="com.project.fastpickup.admin.member.dto.MemberReadDTO">
+      <id property ="email" column ="email"/>
+      <result property="memberName" column="memberName"/>
+      <result property="memberPw" column="memberPw"/>
+      <collection property="rolenames" resultMap="authMap"/>
+  </resultMap>
+
+  <resultMap type="string" id="authMap">
+      <result column ="rolename"/>
+  </resultMap>
+
+<!-- MemberMapper id = "selectOne" -->
+<select id="selectOne" resultMap="memberMap"> 
+  SELECT * FROM 
+  tbl_member 
+  tm INNER JOIN tbl_member_role tmr ON tmr.email = tm.email 
+  WHERE tm.email = #{email}
+</select>
+
+<!-- MemberMapper id = "joinMember" -->
+<insert id="joinMember" parameterType="com.project.fastpickup.admin.member.dto.MemberConvertDTO">
+  INSERT INTO tbl_member
+  (email,memberPw,memberName,memberPhone)
+  VALUES(#{email}, #{memberPw}, #{memberName}, #{memberPhone})
+</insert>
+
+<!-- MemberMapper id = "deleteMember" -->
+<delete id="deleteMember" parameterType="java.lang.String">
+  DELETE FROM tbl_member
+  WHERE email = #{email}
+</delete>
+
+<!-- MemberMapper id = "deleteMemberRole" -->
+<delete id="deleteMemberRole" parameterType="java.lang.String">
+  DELETE FROM tbl_member_role
+  WHERE email = #{email}
+</delete>
+
+<!-- MemberMapper id = "updateMember" -->
+<update id="updateMember" parameterType="com.project.fastpickup.admin.member.dto.MemberConvertDTO">
+  UPDATE tbl_member
+  SET memberPw = #{memberPw}, memberName = #{memberName}, memberPhone = #{memberPhone}
+  WHERE email = #{email}
+</update>
+
+<resultMap id="MemberSnoResultMap" type="long">
+  <id property="sno" column="sno"/>
+</resultMap>
+<!-- MemberMapper id = "readMember" -->
+<select id="readMember" parameterType="java.lang.String" resultMap="MemberResultMap">
+  SELECT
+  m.email,
+  m.memberName,
+  m.memberPhone,
+  m.memberPw,
+  s.sno 
+  FROM
+  tbl_member m
+  LEFT OUTER JOIN tbl_store s ON s.email = m.email
+  WHERE m.email = #{email}
+</select> 
+ <resultMap id="MemberResultMap" type="com.project.fastpickup.admin.member.dto.MemberConvertDTO">
+  <id property="email" column="email"/>
+  <result property="memberPw" column="memberPw"/>
+  <result property="memberName" column="memberName"/>
+  <result property="memberPhone" column="memberPhone"/>
+  <result property="store" column="store"/>
+  <result property="joinDate" column="joinDate"/>
+  <collection property="sno" ofType="long" resultMap="MemberSnoResultMap"/>
+</resultMap>
+
+<!-- MemberMapper id = "checkEmailForException" -->
+<select id="checkEmailForException" parameterType="java.lang.String" resultType="int">
+  SELECT COUNT(*) FROM 
+  tbl_member
+  WHERE email = #{email}
+</select>
+
+
+</mapper>

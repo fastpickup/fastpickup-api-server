@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Date   : 2023.07.31, Author : 권성준, E-mail : thistrik@naver.com -->
+<!-- LikeMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.like.mappers.LikeMapper">
+
+<!-- LikeMapper id = "createLike" -->
+<insert id="createLike" parameterType="com.project.fastpickup.admin.like.dto.LikeCreateDTO">
+    INSERT INTO tbl_like
+    (pno, email)
+    VALUES(#{pno} , #{email})
+</insert>
+
+<!-- LikeMapper id = "incrementLikeCount" -->
+<update id="incrementLikeCount" parameterType="long">
+    UPDATE tbl_product
+    SET likeCount = likeCount + 1
+    WHERE pno = #{pno}
+</update>
+
+<!-- LikeMapper id = "deleteLike" -->
+<delete id="deleteLike" parameterType="com.project.fastpickup.admin.like.dto.LikeDTO">
+    DELETE FROM tbl_like
+    WHERE pno = #{pno} AND email = #{email}
+</delete>
+
+<!-- LikeMapper id = "decrementLikeCount" -->
+<update id="decrementLikeCount" parameterType="long">
+    UPDATE tbl_product
+    SET likeCount = likeCount - 1
+    WHERE pno = #{pno}
+</update>
+
+<!-- LikeMapper id = countLikes"" -->
+<select id="countLikes" parameterType="long">
+    SELECT COUNT(*)
+    FROM tbl_like
+    WHERE pno = #{pno}
+</select>
+
+<!-- LikeMapper id = "checkLikeByMemberAndPost" -->
+<select id="checkLikeByMemberAndPost" parameterType="com.project.fastpickup.admin.like.dto.LikeDTO">
+    SELECT * FROM 
+    tbl_like
+    WHERE pno = #{pno} AND email = #{email}
+</select>
+
+<!-- LikeMapper id = "duplicateEmail" -->
+<select id="duplicateEmail" parameterType="java.lang.String">
+    SELECT COUNT(*)
+    FROM tbl_member 
+    WHERE email = #{email}
+</select>
+
+<!-- LikeMapper id = "duplicatePno" -->
+<select id="duplicatePno" parameterType="long">
+    SELECT COUNT(*)
+    FROM tbl_like
+    WHERE pno = #{pno}
+</select>
+
+</mapper>

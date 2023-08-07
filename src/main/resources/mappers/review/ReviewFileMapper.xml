@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ReviewImgMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.review.mappers.ReviewFileMapper">
+    
+    <insert id="registReviewImg">
+        insert into tbl_review_img (uuid, fileName, rno, ord) values
+        <foreach collection="list" item="item" separator=",">
+            ( #{item.uuid}, #{item.fileName}, #{item.rno}, #{item.ord})
+        </foreach>
+    </insert>
+
+    <delete id ="deleteReviewImg" parameterType ="long">
+        delete from tbl_review_img where rno = #{rno}
+    </delete>
+
+</mapper>

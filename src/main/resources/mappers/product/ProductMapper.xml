@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ProductMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.product.mappers.ProductMapper">
+  <!-- Read Product File (resultMap) -->
+  <resultMap id="fileListMap" type="ProductDTO">
+    <id property="pno" column="pno"/>
+    <result property="productName" column="productName"/>
+    <result property="productContent" column="productContent"/>
+    <result property="productPrice" column="productPrice"/>
+    <result property="registDate" column="registDate"/>
+    <result property="updateDate" column="updateDate"/>
+    <result property="viewCount" column="viewCount"/>
+    <result property="likeCount" column="likeCount"/>
+    <result property="isRecommend" column="isRecommend"/>
+    <result property="isDeletedProduct" column="isDeletedProduct"/>
+    <result property="sno" column="sno"/>
+    <result property="storeName" column="storeName"/>
+    <result property="cno" column="cno"/>
+    <result property="categoryName" column="categoryName"/>
+    <collection property="fileNames" resultMap="fileMap"/>
+  </resultMap>
+
+  <resultMap id="fileMap" type="string">
+    <result property="fileNames" column="fileNames"/>
+  </resultMap>
+  <!-- //Read Product File (resultMap) -->
+
+
+  <!-- Create Product ProductMapper id = "createProduct" -->
+  <insert id="createProduct">
+    insert into tbl_product
+    (productName, productContent, productPrice, isRecommend, sno)
+    values (#{productName}, #{productContent}, #{productPrice}, #{isRecommend}, #{sno})
+    <selectKey resultType="long" keyProperty="pno" order="AFTER">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <!-- List Product ProductMapper id = "getList" -->
+  <select id="getList" resultType="ProductListDTO">
+    select prdt.pno, prdt.productName, prdt.productPrice, prdt.registDate, prdt.viewCount,
+           prdt.likeCount, prdt.isRecommend, prdt.isDeletedProduct, prdt.storeName, prdt.sno,
+           prdt.categoryName, concat(tpi.uuid,'_',tpi.fileName) as fileName, if(prdt.isRecommend = 999999999, 1, 0) as recStatus
+    from (
+            select tp.pno, tp.productName, tp.productPrice, tp.registDate, tp.viewCount,
+                   tp.likeCount, tp.isRecommend, tp.isDeletedProduct, ts.storeName, ts.sno,
+                   tpc.categoryName
+            from tbl_product tp
+              left outer join tbl_store ts on ts.sno = tp.sno
+              left outer join tbl_product_category tpc on tpc.pno = tp.pno
+            where tp.pno > 0 and tp.isDeletedProduct = true
+            <if test="keyword != null and types != null">
+              <trim prefix="and (" prefixOverrides="or" suffix=")">
+                <foreach collection="types" item="type" separator=" or ">
+                  <if test='type == "p"'>
+                    tp.productName like concat('%', #{keyword}, '%')
+                  </if>
+                  <if test='type == "s"'>
+                    ts.storeName like concat('%', #{keyword}, '%')
+                  </if>
+                  <if test='type == "c"'>
+                    tpc.categoryName like concat('%', #{keyword}, '%')
+                  </if>
+                </foreach>
+              </trim>
+            </if>
+            order by tp.pno desc
+            limit #{skip}, #{size}
+        ) as prdt
+    left outer join tbl_product_image tpi
+    on tpi.pno = prdt.pno
+    and (tpi.ord = 0 or tpi.ord is null)
+    order by prdt.isRecommend desc, prdt.pno desc
+  </select>
+
+  <!-- Store List Product ProductMapper id = "getStoreList" -->
+  <select id="getStoreList" resultType="ProductListDTO">
+    select prdt.pno, prdt.productName, prdt.productPrice, prdt.registDate, prdt.viewCount,
+           prdt.likeCount, prdt.isRecommend, prdt.isDeletedProduct, prdt.sno, prdt.categoryName,
+           concat(tpi.uuid,'_',tpi.fileName) as fileName, if(prdt.isRecommend = 999999999, 1, 0) as recStatus
+    from (
+           select tp.pno, tp.productName, tp.productPrice, tp.registDate, tp.viewCount,
+                  tp.likeCount, tp.isRecommend, tp.isDeletedProduct,ts.sno, tpc.categoryName
+           from tbl_product tp
+                  left outer join tbl_store ts on ts.sno = tp.sno
+                  left outer join tbl_product_category tpc on tpc.pno = tp.pno
+           where tp.pno > 0 and tp.isDeletedProduct = true and ts.sno = #{sno}
+           order by tp.pno desc
+           limit #{pr.skip}, #{pr.size}
+         ) as prdt
+     left outer join tbl_product_image tpi
+     on tpi.pno = prdt.pno
+     and (tpi.ord = 0 or tpi.ord is null)
+    order by prdt.isRecommend desc, prdt.pno desc
+  </select>
+
+  <!-- List Total Count Product ProductMapper id = "listCount" -->
+  <select id="listCount">
+    select count(*)
+    from
+    (select tp.pno
+      from tbl_product tp
+      left outer join tbl_store ts on ts.sno = tp.sno
+      left outer join tbl_product_category tpc on tpc.pno = tp.pno
+      where tp.pno > 0 and tp.isDeletedProduct = true
+      <if test="keyword != null and types != null">
+        <trim prefix="and (" prefixOverrides="or" suffix=")">
+          <foreach collection="types" item="type" separator=" or ">
+            <if test='type == "p"'>
+              tp.productName like concat('%', #{keyword}, '%')
+            </if>
+            <if test='type == "s"'>
+              ts.storeName like concat('%', #{keyword}, '%')
+            </if>
+            <if test='type == "c"'>
+              tpc.categoryName like concat('%', #{keyword}, '%')
+            </if>
+          </foreach>
+        </trim>
+      </if>
+      limit #{countEnd}) prdt
+  </select>
+
+  <!-- Store List Total Count Product ProductMapper id = "listStoreCount" -->
+  <select id="listStoreCount">
+    select count(*)
+    from
+    (select tp.pno
+      from tbl_product tp
+      left outer join tbl_store ts on ts.sno = tp.sno
+      left outer join tbl_product_category tpc on tpc.pno = tp.pno
+      where tp.pno > 0 and tp.isDeletedProduct = true and ts.sno = #{sno}
+      limit #{pr.countEnd}) prdt
+  </select>
+
+  <!-- Read Product ProductMapper id = "selectOne" -->
+  <select id="selectOne" resultMap="fileListMap">
+    select tp.pno, tp.productName, tp.productContent, tp.productPrice, tp.registDate,
+        tp.updateDate, tp.likeCount, tp.isRecommend, tp.isDeletedProduct, ts.sno,
+        ts.storeName, tpc.categoryName, concat(tpi.uuid,'_',tpi.fileName) as fileNames
+    from tbl_product tp
+    left outer join tbl_store ts on ts.sno = tp.sno
+    left outer join tbl_product_category tpc on tpc.pno = tp.pno
+    left outer join tbl_product_image tpi on tpi.pno = tp.pno
+    where tp.pno = #{pno}
+  </select>
+
+  <!-- Delete Product ProductMapper id = "deleteProduct" -->
+  <update id="deleteProduct">
+    update tbl_product tp
+    set
+      tp.productName = '', tp.productContent = '', tp.productPrice = 0, tp.registDate = null, tp.updateDate = now(),
+      tp.viewCount = 0, tp.viewCount = 0, tp.isRecommend = 0, tp.isDeletedProduct = false
+    where tp.pno = #{pno}
+  </update>
+
+  <!-- Update Product ProductMapper id = "updateProduct" -->
+  <update id="updateProduct">
+    update tbl_product tp
+    set
+      tp.productName = #{productName}, tp.productContent = #{productContent}, tp.productPrice = #{productPrice}, tp.updateDate = now(), tp.isRecommend = #{isRecommend}
+    where tp.pno = #{pno}
+  </update>
+
+  <!-- Update Product Views ProductMapper id = "viewCount" -->
+  <update id="viewCount">
+    update tbl_product tp
+    set
+      tp.viewCount = tp.viewCount + 1
+    where tp.pno = #{pno}
+  </update>
+
+</mapper>

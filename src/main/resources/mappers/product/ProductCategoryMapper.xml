@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ProductCategoryMapper Xml -->
+<mapper namespace="com.project.fastpickup.admin.product.mappers.ProductCategoryMapper">
+  <!-- Create ProductCategory ProductCategoryMapper id = "createCategory" -->
+  <insert id="createCategory">
+    insert into tbl_product_category
+    (categoryName, pno)
+    values (#{categoryName}, #{pno})
+    <selectKey resultType="long" keyProperty="cno" order="AFTER">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <!-- Update ProductCategory ProductCategoryMapper id = "updateCategory" -->
+  <update id="updateCategory">
+    update tbl_product_category tpc
+    set
+        tpc.categoryName = #{categoryName}
+    where tpc.pno = #{pno}
+  </update>
+</mapper>
