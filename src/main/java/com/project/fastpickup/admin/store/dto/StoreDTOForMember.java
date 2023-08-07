@@ -14,6 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreDTOForMember {
+    private Long sno;
     private Long cno;
     private Long pno;
     private String fileName;
