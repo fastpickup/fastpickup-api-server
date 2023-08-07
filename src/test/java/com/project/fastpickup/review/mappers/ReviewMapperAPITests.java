@@ -107,7 +107,7 @@ public class ReviewMapperAPITests {
         log.info("===Start ReadReivew Mapper Test");
 
         // WHEN
-        ReviewReadDTO readOne = reviewMapper.getReviewRead(TEST_REVIEW_RNO, TEST_EMAIL);
+        ReviewReadDTO readOne = reviewMapper.getReviewRead(TEST_REVIEW_RNO);
 
         // THEN
         log.info(readOne);
@@ -167,7 +167,7 @@ public class ReviewMapperAPITests {
         int removeImg = reviewFileMapper.deleteReviewImg(TEST_REVIEW_RNO);
 
         // THEN
-        ReviewReadDTO reviewReadDTO = reviewMapper.getReviewRead(TEST_REVIEW_RNO, TEST_EMAIL);
+        ReviewReadDTO reviewReadDTO = reviewMapper.getReviewRead(TEST_REVIEW_RNO);
         Assertions.assertEquals(1, removeCount, "review Delete Not Success");
         log.info("=== End Delete Review Test Mapper ===");
 

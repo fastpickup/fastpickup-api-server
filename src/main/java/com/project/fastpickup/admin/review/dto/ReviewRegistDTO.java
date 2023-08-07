@@ -17,6 +17,10 @@ import lombok.ToString;
 public class ReviewRegistDTO {
 
     private Long rno;
+
+    @Builder.Default
+    private Long gno = 0L;
+    
     private Long sno;
     private Long ono;
     private String email;
