@@ -59,9 +59,8 @@
    </select>
 
     <!-- 페이지를 위한 카운트 -->
-    <!-- 테스트 진행 할것 -->
    <select id ="reviewMemberListCount" resultType = "int">
-      select(*) count from
+      select count(*) from
         (select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
             from tbl_review r left outer join tbl_store s on r.sno = s.sno
 		    left outer join tbl_order o on r.ono = o.ono
@@ -90,7 +89,7 @@
 
    <!-- END 맴버 리뷰 리스트 테스트 -->
 
-   <!-- 가맹점 전체 리뷰 리스트 -->
+   <!-- 가맹점 별 리뷰 리스트 -->
    <select id = "getReviewList" resultType="com.project.fastpickup.admin.review.dto.ReviewListDTO">
       select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
             from tbl_review r left outer join tbl_store s on r.sno = s.sno
@@ -98,7 +97,7 @@
 		    left outer join tbl_member m on m.email = o.email
 		    left outer join tbl_product p on o.pno = p.pno
 		    left outer join tbl_product_image pi on p.pno = pi.pno
-        where and r.isDeleted = false and r.sno = #{sno} and pi.ord = 0
+        where r.isDeleted = false and r.sno = #{sno} and pi.ord = 0
 
             <if test="pr.keyword != null and pr.types != null">
               <trim prefix="and (" prefixOverrides="or" suffix=")">
@@ -119,6 +118,35 @@
         order by r.reviewDate desc
         limit #{pr.skip}, #{pr.size}
    </select>
+
+   <select id = "reviewListCount" resultType="int">
+      select count(*) from
+        (select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
+            from tbl_review r left outer join tbl_store s on r.sno = s.sno
+		    left outer join tbl_order o on r.ono = o.ono
+		    left outer join tbl_member m on m.email = o.email
+		    left outer join tbl_product p on o.pno = p.pno
+		    left outer join tbl_product_image pi on p.pno = pi.pno
+        where r.isDeleted = false and r.sno = #{sno} and pi.ord = 0
+
+            <if test="pr.keyword != null and pr.types != null">
+              <trim prefix="and (" prefixOverrides="or" suffix=")">
+                <foreach collection="pr.types" item="type" separator=" or ">
+                  <if test='type == "p"'>
+                    p.productName like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "e"'>
+                    m.email like concat('%', #{pr.keyword}, '%')
+                  </if>
+                  <if test='type == "t"'>
+                    r.reviewTitle like concat('%', #{pr.keyword}, '%')
+                  </if>
+                </foreach>
+              </trim>
+            </if>
+        limit #{pr.countEnd}) review
+   </select>
+  <!-- 가맹점 전체리스트 -->
 
    <!-- 맴버 리뷰 상세 -->
       <resultMap id="reviewMap" type="com.project.fastpickup.admin.review.dto.ReviewReadDTO">
@@ -147,7 +175,7 @@
 		      left outer join tbl_order o on r.ono = o.ono
 		      left outer join tbl_member m on m.email = o.email
 		      left outer join tbl_product p on o.pno = p.pno
-        where r.rno = #{rno} and r.isDeleted = false and r.email = #{email} and r.rno = r.gno
+        where r.rno = #{rno} and r.isDeleted = false and r.rno = r.gno
    </select>
   <!-- END 맴버 리뷰 상세 -->
 

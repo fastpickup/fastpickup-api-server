@@ -20,9 +20,10 @@ public interface ReviewMapper {
 
     // 가맹점 전체 리뷰 리스트
     List<ReviewListDTO> getReviewList(@Param("sno") Long sno, @Param("pr") PageRequestDTO pageRequestDTO);
+    int reviewListCount(@Param("sno") Long sno, @Param("pr") PageRequestDTO pageRequestDTO);
 
     // 사용자 리뷰 상세
-    ReviewReadDTO getReviewRead(@Param("rno")Long rno, @Param("email") String email);
+    ReviewReadDTO getReviewRead(@Param("rno")Long rno);
 
     // 리뷰 작성
     int registReview(ReviewRegistDTO reviewRegistDTO);
