@@ -13,6 +13,7 @@
 <!--        values (#{qno}, #{reply}, #{email})-->
 <!--    </insert>-->
 
+
     <!--  read  -->
     <select id="readQnaReply" parameterType="com.project.fastpickup.admin.qna.dto.reply.QnaReplyReadDTO">
         select rno, email, reply, replyDate
