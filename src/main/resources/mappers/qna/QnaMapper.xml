@@ -12,7 +12,7 @@
         from tbl_qna q
         LEFT outer join tbl_qna_reply r on q.qno = r.qno
         where q.qno > 0 and q.email = #{email}
-        <if test="pageRequestDTO.keyword != null and pageRequestDTO.type != null">
+        <if test="pageRequestDTO.keyword != null and pageRequestDTO.types != null">
             <trim prefix="AND (" prefixOverrides="OR" suffix=")">
                 <foreach collection="pageRequestDTO.types" item="type" separator=" OR ">
                     <if test='type == "e"'>
@@ -32,16 +32,16 @@
     <select id="listCount">
         select count(*) from
         (select qno
-        from tbl_qna
+        from tbl_qna q
         where qno > 0
-        <if test="keyword != null and type != null">
+        <if test="keyword != null and types != null">
             <trim prefix="AND (" prefixOverrides="OR" suffix=")">
                 <foreach collection="types" item="type" separator=" OR ">
                     <if test='type == "e"'>
-                        email like concat('%', #{keyword}, '%')
+                        q.email like concat('%', #{keyword}, '%')
                     </if>
                     <if test='type == "t"'>
-                        qnaTitle like concat('%', #{keyword}, '%')
+                        q.qnaTitle like concat('%', #{keyword}, '%')
                     </if>
                 </foreach>
             </trim>
