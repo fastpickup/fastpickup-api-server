@@ -29,4 +29,5 @@ public class OrderCreateDTO {
     private String email; // 사용자 이메일
     private Long sno; // 가맹정 번호
     private Long pno; // 상품 번호
+    private int totalPrice; // 총 가격 
 }

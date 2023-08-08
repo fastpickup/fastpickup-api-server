@@ -24,8 +24,10 @@ import lombok.extern.log4j.Log4j2;
 public class APIRefreshController {
 
     @RequestMapping("/api/member/refresh")
-    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, String refreshToken) {
-
+    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader,  String refreshToken) {
+        
+        log.info("refreshToken: "+refreshToken);
+        
         if (refreshToken == null) {
             throw new CustomJWTException("NULL_REFRASH");
         }

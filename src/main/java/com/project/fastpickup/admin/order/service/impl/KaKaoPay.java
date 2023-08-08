@@ -1,5 +1,11 @@
 package com.project.fastpickup.admin.order.service.impl;
 
+/*
+ * Date   : 2023.08.07
+ * Author : 권성준
+ * E-mail : thistrik@naver.com
+ */
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -16,14 +22,17 @@ import com.project.fastpickup.admin.order.dto.kakao.KakaoPayApprovalV0;
 import com.project.fastpickup.admin.order.dto.kakao.KakaoPayReadyVO;
 import lombok.extern.log4j.Log4j2;
 
-@Service
 @Log4j2
+@Service
 public class KaKaoPay {
+
     private static final String HOST = "https://kapi.kakao.com";
 
     private KakaoPayReadyVO kakaoPayReadyVO;
     private KakaoPayApprovalV0 kakaoPayApprovalV0;
 
+    // 카카오페이 결제 준비 메소드
+    // 카카오페이와의 연결을 준비하고, 결제를 위한 요청을 보낸다.
     public String kakaoPayReady() {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -34,6 +43,7 @@ public class KaKaoPay {
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
         // 서버로 요청할 Body
+        // 결제 준비 요청을 처리하고, 결제 페이지로 리디렉션할 URL을 반환한다.
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("partner_order_id", "1001");
@@ -42,9 +52,12 @@ public class KaKaoPay {
         params.add("quantity", "1");
         params.add("total_amount", "2100");
         params.add("tax_free_amount", "100");
-        params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
-        params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
-        params.add("fail_url", "http://localhost:8080/kakaoPaySuccessFail");
+        // params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
+        // params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
+        // params.add("fail_url", "http://localhost:8080/kakaoPaySuccessFail");
+        params.add("approval_url", "http://localhost:3000/order/list");
+        params.add("cancel_url", "http://localhost:3000/kakaoPayCancel");
+        params.add("fail_url", "http://localhost:3000/kakaoPaySuccessFail");
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
@@ -67,6 +80,8 @@ public class KaKaoPay {
         return "/pay";
     }
 
+    // 카카오페이 결제 승인 메소드
+    // 사용자가 카카오페이를 통해 결제를 완료한 후 호출되며, 카카오페이와의 결제를 최종 승인한다.
     public KakaoPayApprovalV0 kakaoPayInfo(String pg_token) {
 
         log.info("KakaoPayInfoVO............................................");
@@ -76,7 +91,7 @@ public class KaKaoPay {
 
         // 서버로 요청할 Header
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " +  "9e31945e73bd535f37a14637e5de6938");
+        headers.add("Authorization", "KakaoAK " + "9e31945e73bd535f37a14637e5de6938");
         headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
@@ -95,7 +110,7 @@ public class KaKaoPay {
             kakaoPayApprovalV0 = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body,
                     KakaoPayApprovalV0.class);
             log.info("" + kakaoPayApprovalV0);
-
+            // 결제 승인 요청을 처리하고, 결제 승인 결과를 반환한다.
             return kakaoPayApprovalV0;
 
         } catch (RestClientException e) {
