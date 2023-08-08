@@ -1,11 +1,22 @@
 package com.project.fastpickup.admin.review.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 /*
  * Date   : 2023.07.31
  * Author : 이주용
  * E-mail : wndyd0110@gmail.com
  */
 
+ @Data
+ @AllArgsConstructor
+ @NoArgsConstructor
+ @Builder
+ @ToString
 public class ReviewFileUploadDTO {
     // 변수
     private String uuid; // PK

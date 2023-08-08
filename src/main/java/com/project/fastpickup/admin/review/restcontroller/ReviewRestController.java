@@ -47,6 +47,7 @@ public class ReviewRestController {
     }
 
     // 맴버가 쓴 리뷰 상세 페이지
+     @PreAuthorize("permitAll")
     @GetMapping("/read/{rno}")
     public ReviewReadDTO getReveiwRead(
         @PathVariable("rno") Long rno
