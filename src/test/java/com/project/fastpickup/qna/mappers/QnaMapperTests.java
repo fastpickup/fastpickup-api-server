@@ -80,7 +80,7 @@ public class QnaMapperTests {
         log.info("=== Start List Count Test Mapper ===");
         // WHEN
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build();
-        qnaMapper.listCount(pageRequestDTO);
+        qnaMapper.listCount("9805121234@naver.com",pageRequestDTO);
         // THEN
         log.info("=== End List Count Test Mapper ===");
 

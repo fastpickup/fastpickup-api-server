@@ -33,10 +33,10 @@
         select count(*) from
         (select qno
         from tbl_qna q
-        where qno > 0
-        <if test="keyword != null and types != null">
+        where q.qno > 0 and q.email = #{email}
+        <if test="pageRequestDTO.keyword != null and pageRequestDTO.types != null">
             <trim prefix="AND (" prefixOverrides="OR" suffix=")">
-                <foreach collection="types" item="type" separator=" OR ">
+                <foreach collection="pageRequestDTO.types" item="type" separator=" OR ">
                     <if test='type == "e"'>
                         q.email like concat('%', #{keyword}, '%')
                     </if>
@@ -46,7 +46,7 @@
                 </foreach>
             </trim>
         </if>
-        limit #{countEnd}) as qna
+        limit #{pageRequestDTO.countEnd}) as qna
     </select>
 
     <!--  create  -->
