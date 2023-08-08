@@ -19,6 +19,7 @@
     <result property="isDeletedProduct" column="isDeletedProduct"/>
     <result property="sno" column="sno"/>
     <result property="storeName" column="storeName"/>
+    <result property="email" column="email"/>
     <result property="cno" column="cno"/>
     <result property="categoryName" column="categoryName"/>
     <collection property="fileNames" resultMap="fileMap"/>
@@ -74,7 +75,7 @@
   <select id="selectOne" resultMap="fileListMap">
     select tp.pno, tp.productName, tp.productContent, tp.productPrice, tp.registDate,
         tp.updateDate, tp.likeCount, tp.isRecommend, tp.isDeletedProduct, ts.sno,
-        ts.storeName, tpc.categoryName, concat(tpi.uuid,'_',tpi.fileName) as fileNames
+        ts.storeName, ts.email, tpc.categoryName, concat(tpi.uuid,'_',tpi.fileName) as fileNames
     from tbl_product tp
     left outer join tbl_store ts on ts.sno = tp.sno
     left outer join tbl_product_category tpc on tpc.pno = tp.pno

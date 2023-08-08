@@ -9,6 +9,9 @@ package com.project.fastpickup.admin.order.service.impl;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.project.fastpickup.admin.product.dto.ProductDTO;
+import com.project.fastpickup.admin.product.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,10 +34,15 @@ public class KaKaoPay {
     private KakaoPayReadyVO kakaoPayReadyVO;
     private KakaoPayApprovalV0 kakaoPayApprovalV0;
 
+    @Autowired
+    private ProductService productService;
+
     // 카카오페이 결제 준비 메소드
     // 카카오페이와의 연결을 준비하고, 결제를 위한 요청을 보낸다.
-    public String kakaoPayReady() {
+    public String kakaoPayReady(Long pno, String total, String email, Long sno) {
         RestTemplate restTemplate = new RestTemplate();
+
+        ProductDTO product = productService.selectOne(pno);
 
         // 서버로 요청할 Header
         HttpHeaders headers = new HttpHeaders();
@@ -48,16 +56,16 @@ public class KaKaoPay {
         params.add("cid", "TC0ONETIME");
         params.add("partner_order_id", "1001");
         params.add("partner_user_id", "gorany");
-        params.add("item_name", "갤럭시S9");
+        params.add("item_name", product.getProductName());
         params.add("quantity", "1");
-        params.add("total_amount", "2100");
+        params.add("total_amount", total);
         params.add("tax_free_amount", "100");
-        // params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
-        // params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
-        // params.add("fail_url", "http://localhost:8080/kakaoPaySuccessFail");
-        params.add("approval_url", "http://localhost:3000/order/list");
-        params.add("cancel_url", "http://localhost:3000/kakaoPayCancel");
-        params.add("fail_url", "http://localhost:3000/kakaoPaySuccessFail");
+        params.add("approval_url", "http://localhost:8081/kakaoPay/kakaoPaySuccess?pno="+pno+"&total="+total+"&email="+email+"&sno="+sno);
+        params.add("cancel_url", "http://localhost:8081/kakaoPay/kakaoPayCancel");
+        params.add("fail_url", "http://localhost:8081/kakaoPay/kakaoPaySuccessFail");
+        //params.add("approval_url", "http://localhost:3000/order/complete?pno="+pno);
+        //params.add("cancel_url", "http://localhost:3000/kakaoPayCancel");
+        //params.add("fail_url", "http://localhost:3000/kakaoPaySuccessFail");
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
@@ -82,7 +90,7 @@ public class KaKaoPay {
 
     // 카카오페이 결제 승인 메소드
     // 사용자가 카카오페이를 통해 결제를 완료한 후 호출되며, 카카오페이와의 결제를 최종 승인한다.
-    public KakaoPayApprovalV0 kakaoPayInfo(String pg_token) {
+    public KakaoPayApprovalV0 kakaoPayInfo(String pg_token, Long pno, String total, String email, Long sno) {
 
         log.info("KakaoPayInfoVO............................................");
         log.info("-----------------------------");
@@ -102,7 +110,7 @@ public class KaKaoPay {
         params.add("partner_order_id", "1001");
         params.add("partner_user_id", "gorany");
         params.add("pg_token", pg_token);
-        params.add("total_amount", "2100");
+        params.add("total_amount", total);
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 

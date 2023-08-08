@@ -36,4 +36,6 @@ public class ProductDTO {
   private String categoryName;                              //카테고리명
   @Builder.Default
   private List<String> fileNames = new ArrayList<>();       //파일명
+
+  private String email;                                     //가맹점 email
 }
