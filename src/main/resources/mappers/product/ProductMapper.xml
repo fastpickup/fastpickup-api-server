@@ -30,7 +30,7 @@
   <!-- //Read Product File (resultMap) -->
 
   <!-- Category List ProductMapper id = "getCateList" -->
-  <select id="getCateList">
+  <select id="getCateList" resultType="ProductCategoryDTO">
     select distinct tpc.categoryName
     from tbl_product_category tpc
     order by tpc.categoryName asc
