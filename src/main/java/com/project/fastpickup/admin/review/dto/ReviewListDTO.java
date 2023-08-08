@@ -27,7 +27,8 @@ public class ReviewListDTO {
     private String storeName;         // 가맹점 이름
     private Long pno;                 // 상품 번호
     private String productName;       // 상품 이름
-    private String productImg;        // 상품 사진
+    private String reviewTitle;       // 리뷰 사진
+    private String reviewImg;         // 리뷰 사진
     private LocalDateTime reviewDate; // 리뷰 작성 일자
     private boolean isDeleted;        // 리뷰 삭제 여부
     
