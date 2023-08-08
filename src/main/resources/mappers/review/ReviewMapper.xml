@@ -29,13 +29,13 @@
    <!-- 맴버 리뷰 리스트 -->
    <select id = "getReviewMemberList" resultType="com.project.fastpickup.admin.review.dto.ReviewListDTO">
 
-        select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
+        select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(i.uuid,'_',i.fileName) as reviewImg, reviewTitle ,r.email, r.reviewDate, r.isDeleted 
             from tbl_review r left outer join tbl_store s on r.sno = s.sno
 		    left outer join tbl_order o on r.ono = o.ono
 		    left outer join tbl_member m on m.email = o.email
 		    left outer join tbl_product p on o.pno = p.pno
-		    left outer join tbl_product_image pi on p.pno = pi.pno
-        where r.rno = r.gno and r.isDeleted = false and r.email = #{email} and pi.ord = 0
+		    left outer join tbl_review_img i on r.rno = i.rno
+        where r.rno = r.gno and r.isDeleted = false and r.email = #{email} and (i.ord = 0 or i.ord is null) and r.rno>0
 
             <if test="pr.keyword != null and pr.types != null">
               <trim prefix="and (" prefixOverrides="or" suffix=")">
@@ -61,13 +61,13 @@
     <!-- 페이지를 위한 카운트 -->
    <select id ="reviewMemberListCount" resultType = "int">
       select count(*) from
-        (select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(pi.uuid,'_',pi.fileName) as productImg, r.email, r.reviewDate, r.isDeleted 
+        (select r.rno, o.ono , s.sno, s.storeName, p.pno, p.productName, concat(i.uuid,'_',i.fileName) as reviewImg,reviewTitle ,r.email, r.reviewDate, r.isDeleted 
             from tbl_review r left outer join tbl_store s on r.sno = s.sno
 		    left outer join tbl_order o on r.ono = o.ono
 		    left outer join tbl_member m on m.email = o.email
 		    left outer join tbl_product p on o.pno = p.pno
-		    left outer join tbl_product_image pi on p.pno = pi.pno
-        where r.rno = r.gno and r.isDeleted = false and r.email = #{email} and pi.ord = 0
+		    left outer join tbl_review_img i on r.rno = i.rno
+        where r.rno = r.gno and r.isDeleted = false and r.email = #{email} and (i.ord = 0 or i.ord is null) and r.rno>0
 
             <if test="pr.keyword != null and pr.types != null">
               <trim prefix="and (" prefixOverrides="or" suffix=")">
