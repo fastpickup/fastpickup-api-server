@@ -44,6 +44,9 @@ dependencies {
 	//swagger
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
 
+	//thumbnail
+	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.19'
+
 	//test lombok
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
