@@ -29,7 +29,7 @@ public interface QnaMapper {
     int deleteQna (Long qno);
 
     // total
-    long listCount (PageRequestDTO pageRequestDTO);
+    long listCount (String email, PageRequestDTO pageRequestDTO);
 
 
     

@@ -26,7 +26,7 @@ public class QnaServiceImpl implements QnaService {
     @Override
     public PageResponseDTO<QnaListDTO> listQna(String email, PageRequestDTO pageRequestDTO) {
         List<QnaListDTO> list = qnaMapper.listQna(email,pageRequestDTO);
-        long total = qnaMapper.listCount(pageRequestDTO);
+        long total = qnaMapper.listCount(email,pageRequestDTO);
 
         return PageResponseDTO.<QnaListDTO>withAll()
                 .list(list)

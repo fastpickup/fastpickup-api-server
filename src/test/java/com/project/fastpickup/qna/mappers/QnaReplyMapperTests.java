@@ -73,7 +73,7 @@ public class QnaReplyMapperTests {
         // GIVEN
         log.info("=== Start Read Qna Test Mapper ===");
         // WHEN
-        QnaReplyReadDTO readQnaReply = qnaReplyMapper.readQnaReply(23L);
+        QnaReplyReadDTO readQnaReply = qnaReplyMapper.readQnaReply(66L);
         // THEN
         Assertions.assertNotNull(readQnaReply, "Qna Reply Read is Null");
         log.info("=== End Read Qna Test Mapper ===");
