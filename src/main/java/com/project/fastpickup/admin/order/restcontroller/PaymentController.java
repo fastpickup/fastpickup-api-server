@@ -1,6 +1,10 @@
 package com.project.fastpickup.admin.order.restcontroller;
 
-import java.util.Collections;
+/*
+ * Date   : 2023.08.07
+ * Author : 권성준
+ * E-mail : thistrik@naver.com
+ */
 
 import com.project.fastpickup.admin.order.dto.order.OrderCreateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ public class PaymentController {
         this.kaKaoPay = kaKaoPay;
     }
 
+    // POST | KakaoPay Ready
     @PostMapping("/pay")
     public String kakaoPay(
       @RequestParam("pno") Long pno, @RequestParam("total") String total, @RequestParam("email") String email, @RequestParam("sno") Long sno, @RequestParam("orderCount") int orderCount
@@ -35,6 +40,7 @@ public class PaymentController {
         return kaKaoPay.kakaoPayReady(pno, total, email, sno); // 여기서 카카오페이 결제 준비 페이지 URL을 반환합니다.
     }
 
+    // GET | KakaoPay Success
     @GetMapping("/kakaoPaySuccess")
     public RedirectView kakaoPaySuccess(
       @RequestParam("pg_token") String pg_token, @RequestParam("pno") Long pno, @RequestParam("total") String total, @RequestParam("email") String email, @RequestParam("sno") Long sno, @RequestParam("orderCount") int orderCount
