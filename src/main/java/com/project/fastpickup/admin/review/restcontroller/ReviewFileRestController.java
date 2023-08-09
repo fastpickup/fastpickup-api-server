@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +32,6 @@ import net.coobird.thumbnailator.Thumbnailator;
 @CrossOrigin
 @RequestMapping("/api/files/")
 public class ReviewFileRestController {
-    
-
-public class FileController {
 
   // import 시에 springframework으로 시작하는 Value
   @Value("${com.project.upload.path}")
@@ -130,6 +128,6 @@ public class FileController {
     return Map.of("result", "success");
   }
 
-}
+
 
 }
