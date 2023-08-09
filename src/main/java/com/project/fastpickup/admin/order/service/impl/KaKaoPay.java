@@ -3,7 +3,9 @@ package com.project.fastpickup.admin.order.service.impl;
 /*
  * Date   : 2023.08.07
  * Author : 권성준
+ * Author : 조상희
  * E-mail : thistrik@naver.com
+ * E-mail : jo_sh_1028@naver.com
  */
 
 import java.net.URI;
@@ -39,7 +41,7 @@ public class KaKaoPay {
 
     // 카카오페이 결제 준비 메소드
     // 카카오페이와의 연결을 준비하고, 결제를 위한 요청을 보낸다.
-    public String kakaoPayReady(Long pno, String total, String email, Long sno) {
+    public String kakaoPayReady(Long pno, String total, String email, Long sno, int orderCount) {
         RestTemplate restTemplate = new RestTemplate();
 
         ProductDTO product = productService.selectOne(pno);
@@ -60,7 +62,7 @@ public class KaKaoPay {
         params.add("quantity", "1");
         params.add("total_amount", total);
         params.add("tax_free_amount", "100");
-        params.add("approval_url", "http://localhost:8081/kakaoPay/kakaoPaySuccess?pno="+pno+"&total="+total+"&email="+email+"&sno="+sno);
+        params.add("approval_url", "http://localhost:8081/kakaoPay/kakaoPaySuccess?pno="+pno+"&total="+total+"&email="+email+"&sno="+sno+"&orderCount="+orderCount);
         params.add("cancel_url", "http://localhost:8081/kakaoPay/kakaoPayCancel");
         params.add("fail_url", "http://localhost:8081/kakaoPay/kakaoPaySuccessFail");
         //params.add("approval_url", "http://localhost:3000/order/complete?pno="+pno);
@@ -90,7 +92,7 @@ public class KaKaoPay {
 
     // 카카오페이 결제 승인 메소드
     // 사용자가 카카오페이를 통해 결제를 완료한 후 호출되며, 카카오페이와의 결제를 최종 승인한다.
-    public KakaoPayApprovalV0 kakaoPayInfo(String pg_token, Long pno, String total, String email, Long sno) {
+    public KakaoPayApprovalV0 kakaoPayInfo(String pg_token, Long pno, String total, String email, Long sno, int orderCount) {
 
         log.info("KakaoPayInfoVO............................................");
         log.info("-----------------------------");

@@ -3,10 +3,13 @@ package com.project.fastpickup.admin.order.restcontroller;
 /*
  * Date   : 2023.08.07
  * Author : 권성준
+ * Author : 조상희
  * E-mail : thistrik@naver.com
+ * E-mail : jo_sh_1028@naver.com
  */
 
 import com.project.fastpickup.admin.order.dto.order.OrderCreateDTO;
+import com.project.fastpickup.admin.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,9 @@ public class PaymentController {
     private final KaKaoPay kaKaoPay;
 
     @Autowired
+    private OrderService orderService;
+
+    @Autowired
     public PaymentController(KaKaoPay kaKaoPay) {
         this.kaKaoPay = kaKaoPay;
     }
@@ -37,7 +43,7 @@ public class PaymentController {
         log.info("----------------------------------------------------------");
         log.info("kakaoPay post............................................");
 
-        return kaKaoPay.kakaoPayReady(pno, total, email, sno); // 여기서 카카오페이 결제 준비 페이지 URL을 반환합니다.
+        return kaKaoPay.kakaoPayReady(pno, total, email, sno, orderCount); // 여기서 카카오페이 결제 준비 페이지 URL을 반환합니다.
     }
 
     // GET | KakaoPay Success
@@ -45,22 +51,28 @@ public class PaymentController {
     public RedirectView kakaoPaySuccess(
       @RequestParam("pg_token") String pg_token, @RequestParam("pno") Long pno, @RequestParam("total") String total, @RequestParam("email") String email, @RequestParam("sno") Long sno, @RequestParam("orderCount") int orderCount
     ) {
-        KakaoPayApprovalV0 approval = kaKaoPay.kakaoPayInfo(pg_token, pno, total, email, sno);
+        KakaoPayApprovalV0 approval = kaKaoPay.kakaoPayInfo(pg_token, pno, total, email, sno, orderCount);
 
         OrderCreateDTO orderCreateDTO = OrderCreateDTO.builder()
           .pno(pno)
           .sno(sno)
           .email(email)
+          .orderCount(orderCount)
           .build();
 
         // 여기서 필요한 로직을 수행하고, 결과를 반환합니다.
         // 예를 들어, 결제가 성공적으로 이루어졌는지 확인, 데이터베이스에 기록 등의 작업을 수행할 수 있습니다.
         log.info("----------------------------------------------------------");
+        log.info("----------------------------------------------------------");
         log.info("order create............................................");
         log.info(orderCreateDTO);
 
+        //orderService.createOrder(orderCreateDTO);
+
+        Long ono = orderCreateDTO.getOno();
+
         // 리액트 측으로 리다이렉트 URL 지정
-        String redirectUrl = "http://localhost:3000/order/complete"; // 여기에 원하는 URL을 지정합니다.
+        String redirectUrl = "http://localhost:3000/order/complete/" + ono; // 여기에 원하는 URL을 지정합니다.
 
         return new RedirectView(redirectUrl);
     }
