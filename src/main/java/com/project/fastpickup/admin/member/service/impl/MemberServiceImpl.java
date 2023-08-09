@@ -73,6 +73,15 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public int updateMember(MemberConvertDTO memberConvertDTO) {
         log.info("Is Running UpdateMember ServiceImpl");
+        // Check email format
+        String email = memberConvertDTO.getEmail();
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+        Matcher matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            throw new InvalidEmailException("이메일 형식이 올바르지 않습니다: " + email);
+        }
+        String encodedPassword = passwordEncoder.encode(memberConvertDTO.getMemberPw());
+        memberConvertDTO.setMemberPw(encodedPassword);
         return memberMapper.updateMember(memberConvertDTO);
     }
 
