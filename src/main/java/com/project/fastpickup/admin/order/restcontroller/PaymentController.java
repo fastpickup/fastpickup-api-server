@@ -67,7 +67,7 @@ public class PaymentController {
         log.info("order create............................................");
         log.info(orderCreateDTO);
 
-        //orderService.createOrder(orderCreateDTO);
+        orderService.createOrder(orderCreateDTO);
 
         Long ono = orderCreateDTO.getOno();
 
