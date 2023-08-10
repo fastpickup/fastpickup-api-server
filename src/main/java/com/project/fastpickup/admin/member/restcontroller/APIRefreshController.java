@@ -8,8 +8,12 @@ package com.project.fastpickup.admin.member.restcontroller;
 
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.fastpickup.admin.member.exception.CustomJWTException;
@@ -18,15 +22,17 @@ import com.project.fastpickup.admin.member.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @Log4j2
 public class APIRefreshController {
 
-    @RequestMapping("/api/member/refresh")
-    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader,  String refreshToken) {
-        
+   @RequestMapping(value = "/api/member/refresh", method = RequestMethod.POST)
+public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, @RequestParam String refreshToken) {
+
         log.info("refreshToken: "+refreshToken);
+        log.info("authHeader: "+authHeader);
         
         if (refreshToken == null) {
             throw new CustomJWTException("NULL_REFRASH");
@@ -37,9 +43,11 @@ public class APIRefreshController {
         }
 
         String accessToken = authHeader.substring(7);
+        log.info("베어러 제거한 엑세스 토큰: "+ accessToken);
 
         // Access 토큰이 만료되지 않았다면
         if (checkExpiredToken(accessToken) == false) {
+            log.info("만료되지않음");
             return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
         }
 
@@ -59,7 +67,7 @@ public class APIRefreshController {
 
     // 시간이 1시간 미만으로 남았다면
     private boolean checkTime(Integer exp) {
-
+        log.info("엑세스 한시간 미만");
         // JWT exp를 날짜로 변환
         java.util.Date expDate = new java.util.Date((long) exp * (1000));
 

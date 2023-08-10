@@ -46,12 +46,12 @@ public class JWTUtil {
     }
 
     public static Map<String, Object> validateToken(String token) {
-
+        log.info("토큰정보 in JWTUtil: "+ token);
         Map<String, Object> claim = null;
         try{
 
             SecretKey key = Keys.hmacShaKeyFor(JWTUtil.key.getBytes("UTF-8"));
-
+            log.info("시크릿키: "+ key);
             claim = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
