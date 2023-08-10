@@ -65,6 +65,7 @@ public class StoreServiceTests {
                 pageRequestDTO);
         // THEN
         log.info(listEveryThing.getList());
+        log.info(listEveryThing);
         Assertions.assertNotNull(listEveryThing, "listEveryThing Should Be Not Null");
         log.info("=== End List Store For Category ===");
     }
