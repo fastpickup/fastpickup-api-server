@@ -236,5 +236,26 @@ public class ReviewMapperAPITests {
 
     }
 
+    @Test
+    @Transactional
+    @DisplayName("각 가맹점 당 리뷰 ")
+    public void getByStoreReview(){
+
+        List<ReviewReadDTO> list = reviewMapper.getByStoreReview(108L, pageRequestDTO);
+
+        log.info(list);
+
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("각 가맹점 당 리뷰 카운트 ")
+    public void getByStoreReviewCnt(){
+
+        int count = reviewMapper.getByStoreReviewCnt(108L, pageRequestDTO);
+
+        log.info(count);
+
+    }
 
 }

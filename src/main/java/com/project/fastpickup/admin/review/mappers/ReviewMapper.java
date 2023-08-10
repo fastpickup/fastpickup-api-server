@@ -16,11 +16,10 @@ public interface ReviewMapper {
     List<ReviewListDTO> getReviewMemberList(@Param("email")String email, @Param("pr")PageRequestDTO pageRequestDTO);
     // 검색 조건 / 페이징을 위한 카운트
     int reviewMemberListCount(@Param("email")String email, @Param("pr")PageRequestDTO pageRequestDTO);
-    
 
     // 가맹점 전체 리뷰 리스트
-    List<ReviewListDTO> getReviewList(@Param("sno") Long sno, @Param("pr") PageRequestDTO pageRequestDTO);
-    int reviewListCount(@Param("sno") Long sno, @Param("pr") PageRequestDTO pageRequestDTO);
+    List<ReviewReadDTO> getByStoreReview(@Param("sno") Long sno, @Param("pr") PageRequestDTO pageRequestDTO);
+    int getByStoreReviewCnt(@Param("sno") Long sno, @Param("pr") PageRequestDTO pageRequestDTO);
 
     // 사용자 리뷰 상세
     ReviewReadDTO getReviewRead(@Param("rno")Long rno);

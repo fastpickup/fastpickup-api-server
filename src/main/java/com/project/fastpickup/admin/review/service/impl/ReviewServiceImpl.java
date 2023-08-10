@@ -43,6 +43,19 @@ public class ReviewServiceImpl implements ReviewService {
                 .pageRequestDTO(pageRequestDTO)
                 .build();
     }
+    // 가맹점별 리뷰 리스트
+    @Override
+    public PageResponseDTO<ReviewReadDTO> storeReviewList(Long rno, PageRequestDTO pageRequestDTO) {
+
+        List<ReviewReadDTO> list = reviewMapper.getByStoreReview(rno, pageRequestDTO);
+        int total = reviewMapper.getByStoreReviewCnt(rno, pageRequestDTO);
+
+        return PageResponseDTO.<ReviewReadDTO>withAll()
+                .list(list)
+                .total(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
 
     // 리뷰 상세
     @Override
@@ -58,20 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.getStoreReview(rno);
     }
 
-    // 가맹점 별 리뷰 리스트
-    @Override
-    public PageResponseDTO<ReviewListDTO> reviewList(Long rno, PageRequestDTO pageRequestDTO) {
 
-        List<ReviewListDTO> list = reviewMapper.getReviewList(rno, pageRequestDTO);
-        int total = reviewMapper.reviewListCount(rno, pageRequestDTO);
-
-        return PageResponseDTO.<ReviewListDTO>withAll()
-                .list(list)
-                .total(total)
-                .pageRequestDTO(pageRequestDTO)
-                .build();
-
-    }
 
     // 리뷰 등록
     @Override
@@ -156,6 +156,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return rno;
     }
+
 
 
 
