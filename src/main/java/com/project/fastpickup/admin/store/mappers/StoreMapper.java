@@ -23,7 +23,7 @@ public interface StoreMapper {
     StoreDTO readStore(Long sno);
 
     // Total Store
-    int total(PageRequestDTO pageRequestDTO);
+    int total(@Param("pr") PageRequestDTO pageRequestDTO, @Param("categoryName") String categoryName);
 
     // duplicate Sno
     int duplicateSno(Long sno);

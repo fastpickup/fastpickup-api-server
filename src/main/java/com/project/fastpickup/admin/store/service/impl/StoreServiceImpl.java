@@ -60,12 +60,11 @@ public class StoreServiceImpl implements StoreService {
     public PageResponseDTO<StoreDTOForMember> listStoreForCategory(String categoryName, PageRequestDTO pageRequestDTO) {
         log.info("Is Running List Store For Category ServiceImpl");
         List<StoreDTOForMember> list = storeMapper.listStoreForCategory(categoryName, pageRequestDTO);
-        int total = storeMapper.total(pageRequestDTO);
+        int total = storeMapper.total(pageRequestDTO, categoryName);
         return PageResponseDTO.<StoreDTOForMember>withAll()
                 .list(list)
                 .total(total)
                 .pageRequestDTO(pageRequestDTO)
                 .build();
     }
-
 }

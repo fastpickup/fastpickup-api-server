@@ -20,5 +20,6 @@ public interface StoreService {
     // Check Store Number
     void checkStoreNumber(Long sno);
 
+    // List Store For Category 
     PageResponseDTO<StoreDTOForMember> listStoreForCategory(String categoryName, PageRequestDTO pageRequestDTO);
 }
