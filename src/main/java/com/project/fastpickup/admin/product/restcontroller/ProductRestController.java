@@ -45,12 +45,11 @@ public class ProductRestController {
   //List Store Prodcut
   @GetMapping("{sno}/list")
   @PreAuthorize("permitAll")
-  public ResponseEntity<Map<String, PageResponseDTO<ProductListDTO>>> getProductList(
+  public PageResponseDTO<ProductListDTO> getProductList(
     @PathVariable("sno") Long sno, PageRequestDTO pageRequestDTO
   ){
     log.info("get REST | Get Product List =================");
-    PageResponseDTO<ProductListDTO> list = productService.getStoreList(pageRequestDTO, sno);
-    return new ResponseEntity<>(Map.of("list", list), HttpStatus.OK);
+    return productService.getStoreList(pageRequestDTO, sno);
   }
 
   //Read Product

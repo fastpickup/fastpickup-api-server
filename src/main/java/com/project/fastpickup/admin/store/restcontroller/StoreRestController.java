@@ -50,11 +50,10 @@ public class StoreRestController {
     }
 
     // List Store And CategoryName Api
-    @PreAuthorize("permitAll")
+//    @PreAuthorize("permitAll")
     @GetMapping("list/{categoryName}")
-    public ResponseEntity<Map<String, PageResponseDTO<StoreDTOForMember>>> getListStoreForCategoryName(@PathVariable("categoryName") String categoryName, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<StoreDTOForMember> getListStoreForCategoryName(@PathVariable("categoryName") String categoryName, PageRequestDTO pageRequestDTO) {
         log.info("RestController | Api Store List For CategoryName");
-        PageResponseDTO<StoreDTOForMember> list = storeService.listStoreForCategory(categoryName, pageRequestDTO);
-        return new ResponseEntity<>(Map.of("list", list), HttpStatus.OK);
+        return storeService.listStoreForCategory(categoryName, pageRequestDTO);
     }
 }

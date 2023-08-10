@@ -25,4 +25,5 @@ public class StoreDTOForMember {
     private Long pno;
     private String fileName;
     private String categoryName;
+    private String storeName;
 }

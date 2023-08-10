@@ -49,11 +49,22 @@ WHERE s.sno = #{sno};
 <select id="total" resultType="int">
   SELECT COUNT(*)
   FROM (
-    SELECT * FROM 
-    tbl_product_category c 
-    WHERE categoryName = #{categoryName}
+         SELECT
+           c.cno,
+           c.pno,
+           p.sno,
+           c.categoryName,
+           s.storeName,
+           concat(pi.uuid, '_', pi.fileName) AS fileName,
+           ROW_NUMBER() OVER (PARTITION BY s.sno ORDER BY p.sno DESC, c.cno DESC) AS rn
+         FROM tbl_product_category c
+                LEFT OUTER JOIN tbl_product p on c.pno = p.pno
+                LEFT OUTER JOIN tbl_product_image pi on pi.pno = p.pno AND pi.ord = 0
+                LEFT OUTER JOIN tbl_store s on p.sno = s.sno
+         WHERE c.categoryName = #{categoryName}
+       ) t
+  WHERE rn = 1
   LIMIT #{pr.countEnd}
-  ) as tbl_store
 </select>
 
 
