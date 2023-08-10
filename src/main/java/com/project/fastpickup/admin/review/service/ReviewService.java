@@ -16,7 +16,7 @@ public interface ReviewService {
     // 맴버 별 리뷰
     PageResponseDTO<ReviewListDTO> reviewMemberList(String email,PageRequestDTO pageRequestDTO);
     // 가맹점 별 리뷰
-    PageResponseDTO<ReviewListDTO> reviewList(Long rno, PageRequestDTO pageRequestDTO);
+    PageResponseDTO<ReviewReadDTO> storeReviewList(Long rno, PageRequestDTO pageRequestDTO);
 
     // 맴버 리뷰 상세
     ReviewReadDTO reviewRead(Long rno);

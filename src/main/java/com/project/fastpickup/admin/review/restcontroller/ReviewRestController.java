@@ -67,11 +67,11 @@ public class ReviewRestController {
     // 가맹점 별 리뷰 리스트
     @PreAuthorize("permitAll")
     @GetMapping("/store/{sno}")
-    public PageResponseDTO<ReviewListDTO> getReviewPage(
+    public PageResponseDTO<ReviewReadDTO> getReviewPage(
         @PathVariable("sno") Long sno,
         PageRequestDTO pageRequestDTO
     ){
-        return reviewService.reviewList(sno, pageRequestDTO);
+        return reviewService.storeReviewList(sno, pageRequestDTO);
       
     }
     
