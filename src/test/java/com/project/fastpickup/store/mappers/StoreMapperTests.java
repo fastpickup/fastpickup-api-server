@@ -63,7 +63,7 @@ public class StoreMapperTests {
         log.info("=== Start Total Store Mapper Test ===");
         // WHEN
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build();
-        int totalCount = storeMapper.total(pageRequestDTO);
+        int totalCount = storeMapper.total(pageRequestDTO, TEST_STORE_NAME);
         // THEN
         log.info(totalCount);
         Assertions.assertNotNull(totalCount, "totalCount Should Be Not Null");
