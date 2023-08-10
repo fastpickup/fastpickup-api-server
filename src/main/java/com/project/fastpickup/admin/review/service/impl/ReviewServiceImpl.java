@@ -52,6 +52,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     }
 
+    // 가맹점 리뷰 답글
+    @Override
+    public ReviewReadDTO storeReview(Long rno) {
+        return reviewMapper.getStoreReview(rno);
+    }
+
     // 가맹점 별 리뷰 리스트
     @Override
     public PageResponseDTO<ReviewListDTO> reviewList(Long rno, PageRequestDTO pageRequestDTO) {
@@ -150,5 +156,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return rno;
     }
+
+
 
 }

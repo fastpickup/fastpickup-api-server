@@ -17,12 +17,14 @@ import lombok.ToString;
 public class ReviewReadDTO {
 
     private Long rno;                   // 리뷰번호 PK
+    private Long gno;                   // 리뷰 그룹번호
     private Long ono;                   // 주문 번호
     private Long sno;                   // 가맹점 번호
     private String storeName;           // 가맹점 이름
     private Long pno;                   // 상품 번호
     private String productName;         // 상품 이름
-    private String email;               // 작성자
+    private String email;               // 작성자 이메일
+    private String memberName;          // 작성자 
     private String reviewTitle;         // 리뷰 제목
     private String reviewContent;       // 리뷰 내용
     private List<String> fileNames;     // 리뷰 사진

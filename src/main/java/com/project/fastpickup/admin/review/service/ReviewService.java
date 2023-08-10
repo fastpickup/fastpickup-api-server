@@ -21,6 +21,9 @@ public interface ReviewService {
     // 맴버 리뷰 상세
     ReviewReadDTO reviewRead(Long rno);
 
+    // 가맹점 리뷰 답글
+    ReviewReadDTO storeReview(Long rno);
+
     // 리뷰 등록
     Long registReview(ReviewRegistDTO reviewRegistDTO);
 

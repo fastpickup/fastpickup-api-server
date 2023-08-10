@@ -25,6 +25,9 @@ public interface ReviewMapper {
     // 사용자 리뷰 상세
     ReviewReadDTO getReviewRead(@Param("rno")Long rno);
 
+    // 가맹점 리뷰 답글
+    ReviewReadDTO getStoreReview(Long rno);
+
     // 리뷰 작성
     int registReview(ReviewRegistDTO reviewRegistDTO);
     int updateGno(Long rno);
