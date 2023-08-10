@@ -20,6 +20,7 @@ import com.project.fastpickup.admin.review.dto.ReviewRegistDTO;
 import com.project.fastpickup.admin.review.dto.ReviewUpdateDTO;
 import com.project.fastpickup.admin.review.mappers.ReviewFileMapper;
 import com.project.fastpickup.admin.review.mappers.ReviewMapper;
+import com.project.fastpickup.admin.review.service.ReviewService;
 import com.project.fastpickup.admin.util.PageRequestDTO;
 
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +31,9 @@ public class ReviewMapperAPITests {
 
     @Autowired(required = false)
     private ReviewMapper reviewMapper;
+
+    @Autowired(required = false)
+    private ReviewService reviewService;
 
     @Autowired(required = false)
     private ReviewFileMapper reviewFileMapper;
@@ -209,7 +213,7 @@ public class ReviewMapperAPITests {
 
     @Test
     @Transactional
-    @DisplayName("가맹점 리뷰 테스트")
+    @DisplayName("가맹점 전체 리뷰 테스트")
     public void sotreReview(){
 
        List<ReviewListDTO> list =  reviewMapper.getReviewList(31L, pageRequestDTO);
@@ -219,5 +223,18 @@ public class ReviewMapperAPITests {
        log.info("===================");
 
     }
+
+    @Test
+    @Transactional
+    @DisplayName("가맹점 리뷰 답글 테스트")
+    public void getstoreReview(){
+
+       ReviewReadDTO read =  reviewService.storeReview(138L);
+       log.info("serview============================");
+       log.info(read);
+       log.info("============================");
+
+    }
+
 
 }

@@ -179,9 +179,26 @@
    </select>
   <!-- END 맴버 리뷰 상세 -->
 
+      <!-- 가맹점 리뷰 답글 -->
+    <select id="getStoreReview" resultType = "com.project.fastpickup.admin.review.dto.ReviewReadDTO">
+    
+      select r.rno,r.gno ,o.ono ,s.sno, s.storeName, p.pno, p.productName, r.email ,r.reviewTitle, r.reviewContent, concat(ri.uuid,'_',ri.fileName) as fileNames, r.reviewDate, r.isDeleted
+        from tbl_review r left outer join tbl_store s on r.sno = s.sno
+		      left outer join tbl_review_img ri on r.rno = ri.rno
+		      left outer join tbl_order o on r.ono = o.ono
+		      left outer join tbl_member m on m.email = o.email
+		      left outer join tbl_product p on o.pno = p.pno
+        where r.gno = #{rno} and r.isDeleted = false and r.rno != r.gno
+        order by r.rno desc; 
+
+    </select>
+    <!-- 가맹점 리뷰 답글 -->
+
+
+
   <!-- 리뷰 삭제 -->
   <update id ="removeReview">
-    update tbl_review set isDeleted = true where rno = #{rno}
+    update tbl_review set isDeleted = true, reviewTitle='삭제된 리뷰 입니다.', reviewContent='삭제된 리뷰 입니다.' where rno = #{rno}
   </update>
   <!-- END 리뷰 삭제 -->
 

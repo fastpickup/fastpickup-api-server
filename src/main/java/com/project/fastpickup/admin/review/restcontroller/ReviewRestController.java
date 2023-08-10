@@ -47,12 +47,21 @@ public class ReviewRestController {
     }
 
     // 맴버가 쓴 리뷰 상세 페이지
-     @PreAuthorize("permitAll")
+    @PreAuthorize("permitAll")
     @GetMapping("/read/{rno}")
     public ReviewReadDTO getReveiwRead(
         @PathVariable("rno") Long rno
     ){
         return reviewService.reviewRead(rno);
+    }
+
+    // 가맹점이 쓴 리뷰 답글
+    @PreAuthorize("permitAll")
+    @GetMapping("/store/read/{rno}")
+    public ReviewReadDTO getStoreReview(
+        @PathVariable("rno") Long rno
+    ){
+        return reviewService.storeReview(rno);
     }
 
     // 가맹점 별 리뷰 리스트
