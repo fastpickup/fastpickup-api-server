@@ -14,7 +14,7 @@ import java.util.List;
 public interface QnaMapper {
 
     // list
-    List<QnaListDTO> listQna (String email, PageRequestDTO pageRequestDTO);
+    List<QnaListDTO> listQna (@Param("email") String email, @Param("pr") PageRequestDTO pageRequestDTO);
 
     // Create
     int createQna (QnaRegistDTO qnaRegistDTO);
@@ -29,8 +29,6 @@ public interface QnaMapper {
     int deleteQna (Long qno);
 
     // total
-    long listCount (String email, PageRequestDTO pageRequestDTO);
+    long listCount (@Param("email") String email, @Param("pr") PageRequestDTO pageRequestDTO);
 
-
-    
 }

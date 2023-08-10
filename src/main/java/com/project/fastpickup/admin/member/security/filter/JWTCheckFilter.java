@@ -49,6 +49,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if(path.startsWith("/api/member/refresh")) {
+            return true;
+        }
+
         if(path.equals("/api/member/create")) {
             return true;
         }
@@ -90,17 +94,21 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        log.info("request JWT Filter: " + request );
+        log.info("response JWT Filter: " +response);
         log.info("=========doFilterInternal=========");
 
         log.info("========doFilterInternal==========");
 
         String authHeaderStr = request.getHeader("Authorization");
-
+        log.info("authHeaderStr JWT Filter: "+ authHeaderStr);
         try {
             // Bearer accestoken...
             String accessToken = authHeaderStr.substring(7);
+            log.info("베어러 자른 엑세스:"+ accessToken);
             Map<String, Object> claims = JWTUtil.validateToken(accessToken);
-
+            log.info("accessToken JWT Filter: "+accessToken);
             log.info("JWT claims: " + claims);
 
             String email = (String) claims.get("email");
@@ -119,11 +127,12 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
             log.info("-----------------------------------");
             log.info(memberDTO);
-            log.info(memberDTO.getAuthorities());
+            log.info(memberDTO.getAuthorities()+"인증정보");
 
             // 사용자의 정보를 가져와 토큰에 넣어서 시큐리티에서 쓸수있게 전달
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO,
                     memberPw, memberDTO.getAuthorities());
+                    log.info("authenticationToken JWT Filter: "+authenticationToken);
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
@@ -132,14 +141,15 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             // Access Token 문제 Exception
         } catch (Exception e) {
 
-            log.error("JWT Check Error..............");
+            log.error("JWT Check Error..............", e);
             log.error(e.getMessage());
 
             Gson gson = new Gson();
             String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
-
+            log.info("제이슨 메시지:"+ msg);
             response.setContentType("application/json; charset=UTF-8");
             PrintWriter printWriter = response.getWriter();
+            log.info("프린트 라이터:"+ printWriter);
             printWriter.println(msg);
             printWriter.close();
         }
