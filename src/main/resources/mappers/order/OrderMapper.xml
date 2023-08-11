@@ -36,7 +36,7 @@
         o.sno,
         o.registDate,
         p.productName,
-        p.productPrice,
+        p.productPrice * o.orderCount as productPrice,
         concat(pi.uuid, '_', pi.fileName)   as fileName
         FROM tbl_member m
         LEFT OUTER JOIN tbl_order 		    o on o.email = m.email
