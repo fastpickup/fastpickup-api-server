@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
     public PageResponseDTO<OrderAndHistoryListDTO> listMyOrderHistory(String email, PageRequestDTO pageRequestDTO) {
         log.info("Is Running List My Order History ServiceImpl");
         List<OrderAndHistoryListDTO> list = orderMapper.listOrderMyHistory(email, pageRequestDTO);
-        int total = orderMapper.total(pageRequestDTO);
+        int total = orderMapper.total(pageRequestDTO, email);
         return PageResponseDTO.<OrderAndHistoryListDTO>withAll()
                 .list(list)
                 .total(total)

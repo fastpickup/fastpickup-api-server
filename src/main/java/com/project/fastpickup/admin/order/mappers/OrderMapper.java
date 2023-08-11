@@ -27,7 +27,7 @@ public interface OrderMapper {
     OrderDTO readOrder(Long ono);
 
     // Total
-    int total(PageRequestDTO pageRequestDTO);
+    int total(@Param("pr") PageRequestDTO pageRequestDTO, @Param("email") String email);
 
     // Duplicate Ono
     int duplicateOno(Long ono);

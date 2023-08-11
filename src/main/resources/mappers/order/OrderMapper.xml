@@ -45,6 +45,7 @@
         LEFT OUTER JOIN  tbl_product_image pi on pi.pno = p.pno
         WHERE m.email = #{email} 
           AND pi.ord = 0
+        ORDER BY o.ono DESC 
         LIMIT #{pr.skip}, #{pr.size}
     </select>    
 
@@ -53,13 +54,25 @@
      SELECT COUNT(*)
         FROM(
             SELECT 
+            m.memberName,
+            m.memberPhone,
+            m.email,
             o.ono,
-            s.sno
-            FROM tbl_order             o
-            LEFT OUTER JOIN tbl_store  s ON o.sno = s.sno
-            LEFT OUTER JOIN tbl_member m ON s.email = m.email
-            WHERE o.ono > 0
-        LIMIT #{countEnd}
+            o.pno,
+            o.sno,
+            o.registDate,
+            p.productName,
+            p.productPrice,
+            concat(pi.uuid, '_', pi.fileName)   as fileName
+            FROM tbl_member m
+            LEFT OUTER JOIN tbl_order 		    o on o.email = m.email
+            LEFT OUTER JOIN tbl_order_history   h on h.ono = o.ono
+            LEFT OUTER JOIN  tbl_product 	    p on p.pno = o.pno
+            LEFT OUTER JOIN  tbl_product_image pi on pi.pno = p.pno
+            WHERE m.email = #{email} 
+            AND pi.ord = 0
+            ORDER BY o.ono DESC 
+        LIMIT #{pr.countEnd}
         ) as tbl_order
     </select>
 
