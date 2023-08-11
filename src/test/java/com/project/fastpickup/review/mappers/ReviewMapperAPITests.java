@@ -211,18 +211,6 @@ public class ReviewMapperAPITests {
         }
     }
 
-    @Test
-    @Transactional
-    @DisplayName("가맹점 전체 리뷰 테스트")
-    public void sotreReview(){
-
-       List<ReviewListDTO> list =  reviewMapper.getReviewList(31L, pageRequestDTO);
-
-       log.info("===================");
-       log.info(list);
-       log.info("===================");
-
-    }
 
     @Test
     @Transactional
