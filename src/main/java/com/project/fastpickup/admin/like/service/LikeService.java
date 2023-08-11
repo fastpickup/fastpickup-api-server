@@ -25,4 +25,7 @@ public interface LikeService {
 
     // checkEmailNotLogin
     void checkEmailNotLogin(String email);
+
+    // Store Like Count 
+    int countStoreLike(Long sno);
 }

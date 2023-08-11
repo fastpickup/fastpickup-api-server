@@ -37,4 +37,7 @@ public interface LikeMapper {
 
     // Check Email 
     int duplicateEmail(String email);
+
+    // Count Store Like 
+    int countStoreLike(Long sno);
 }

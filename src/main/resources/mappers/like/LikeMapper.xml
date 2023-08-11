@@ -62,4 +62,13 @@
     WHERE pno = #{pno}
 </select>
 
+<!-- LikeMappe id = "CountStoreLike" -->
+<select id="countStoreLike" parameterType="long" resultType="int">
+   SELECT COUNT(*) FROM 
+   tbl_like k
+   LEFT OUTER JOIN tbl_product  p ON p.pno = k.pno
+   LEFT OUTER JOIN tbl_store    s ON s.sno = p.sno
+   WHERE s.sno = #{sno}
+</select>
+
 </mapper>
