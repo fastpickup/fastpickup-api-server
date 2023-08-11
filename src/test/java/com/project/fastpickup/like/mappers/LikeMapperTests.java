@@ -31,6 +31,7 @@ public class LikeMapperTests {
 
     private static final String TEST_EMAIL = "thistrik@naver.com";
     private static final Long TEST_PROUDCT_NUMBER = 22L;
+    private static final Long TEST_SNO = 116L;
 
     // BeforeEach 사용을 위한 DTO 정의
     private LikeDTO likeDTO;
@@ -108,5 +109,20 @@ public class LikeMapperTests {
         // THEN
         Assertions.assertNull(count, "count Should Be Null");
         log.info("=== Start Read Like Mapper Test ===");
+    }
+
+    // Count Store Like Mapper Test
+    @Test
+    @Transactional
+    @DisplayName("Mapper: 좋아요 각 가맹점 별 개수 테스트")
+    public void countLikeStore() {
+        // GIVEN
+        log.info("=== Start Count Like Store Mapper Test ===");
+        // WHEN
+        int count = likeMapper.countStoreLike(TEST_SNO);
+        // THEN
+        log.info("Store Like Count: " + count);
+        Assertions.assertNotNull(count, "count Should Be Not Null");
+        log.info("=== End Count Like Store Mapper Test ===");
     }
 }

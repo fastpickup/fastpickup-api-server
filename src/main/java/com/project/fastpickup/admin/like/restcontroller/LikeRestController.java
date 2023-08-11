@@ -1,5 +1,11 @@
 package com.project.fastpickup.admin.like.restcontroller;
 
+/*
+ * Date   : 2023.07.31
+ * Author : 권성준
+ * E-mail : thistrik@naver.com
+ */
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +40,12 @@ public class LikeRestController {
     // Post Like Toggle API
     @PreAuthorize("permitAll")
     @PostMapping("/pno/toggle/{pno}/{email}")
-    public ResponseEntity<Map<String, Integer>> toggleLike(@PathVariable("pno") Long pno,
+    public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable("pno") Long pno,
             @PathVariable("email") String email) {
         log.info("Restcontroller | Api Toggle Like");
         int result = likeService.toggleLike(pno, email);
-        return new ResponseEntity<>(Map.of("result", result), HttpStatus.OK);
+        Long count = likeService.countLike(pno);
+        return new ResponseEntity<>(Map.of("toggleResult", result, "likeCount", count), HttpStatus.OK);
     }
 
     // Get Like Count API
@@ -58,5 +65,14 @@ public class LikeRestController {
         log.info("RestController | Api Check Like");
         LikeDTO result = likeService.checkLikeByMemberAndPost(pno, email);
         return new ResponseEntity<>(Map.of("liked", result != null), HttpStatus.OK);
+    }
+
+    // Count Like Store 
+    @PreAuthorize("permitAll")
+    @GetMapping("/sno/{sno}")
+    public ResponseEntity<Map<String, Integer>> countStoreLike(@PathVariable("sno") Long sno) {
+        log.info("RestController | Api Count Store Like");
+        int result = likeService.countStoreLike(sno);
+        return new ResponseEntity<>(Map.of("result", result), HttpStatus.OK);
     }
 }

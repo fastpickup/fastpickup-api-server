@@ -86,4 +86,12 @@ public class LikeServiceImpl implements LikeService {
             throw new NotLoggedInException("로그인 하지 않은 사용자 입니다.");
         }
     }
+
+    // Store Like Count 
+    @Override
+    @Transactional
+    public int countStoreLike(Long sno) {
+       log.info("Is Running Store Like Count ServiceImpl");
+       return likeMapper.countStoreLike(sno);
+    }
 }
