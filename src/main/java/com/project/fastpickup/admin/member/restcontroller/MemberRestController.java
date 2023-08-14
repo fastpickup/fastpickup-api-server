@@ -26,12 +26,6 @@ import com.project.fastpickup.admin.member.service.MemberService;
 
 import lombok.extern.log4j.Log4j2;
 
-/*
- * Date   : 2023.08.03
- * Author : 권성준
- * E-mail : thistrik@naver.com
- */
-
 @Log4j2
 @RestController
 @RequestMapping("/api/member/")

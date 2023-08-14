@@ -50,6 +50,10 @@ dependencies {
 	//test lombok
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// HTTP REQUEST USINg 
+	implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+
 }
 
 tasks.named('test') {
