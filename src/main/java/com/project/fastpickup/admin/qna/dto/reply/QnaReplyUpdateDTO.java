@@ -1,5 +1,13 @@
 package com.project.fastpickup.admin.qna.dto.reply;
 
+/*
+ * Date   : 2023.07.31
+ * Author : 송수정
+ * Author : 이범수
+ * E-mail : sujung033131@gmail.com
+ * E-mail : beomsu_1221@naver.com
+ */
+
 import lombok.*;
 
 @Getter
