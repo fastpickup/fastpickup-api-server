@@ -26,7 +26,7 @@ public interface StoreMapper {
     int total(@Param("pr") PageRequestDTO pageRequestDTO, @Param("categoryName") String categoryName);
 
     // duplicate Sno
-    int duplicateSno(Long sno);
+    Long duplicateSno(Long sno);
 
     // List Store For Category
     List<StoreDTOForMember> listStoreForCategory(@Param("categoryName") String categoryName, @Param("pr") PageRequestDTO pageRequestDTO);

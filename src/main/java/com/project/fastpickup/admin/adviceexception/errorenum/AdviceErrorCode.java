@@ -25,7 +25,9 @@ public enum AdviceErrorCode {
     HTTP_CLIENT_ERROR(HttpStatus.BAD_REQUEST, ex -> "HTTP Client Error Exception: " + ex.getMessage()),
     HTTP_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, ex -> "HTTP Server Error Exception: " + ex.getMessage()),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, ex -> "Resource Not Found Exception: " + ex.getMessage()),
-    ACCESS_DENIED(HttpStatus.FORBIDDEN, ex -> "Access Denied Exception: " + ex.getMessage());
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, ex -> "Access Denied Exception: " + ex.getMessage()),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, ex -> "Unauthorized Exception: " + ex.getMessage()),
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, ex -> "Store Not Found: " + ex.getMessage());
 
     private final HttpStatus status;
     private final Function<Exception, String> messageExtractor;

@@ -41,14 +41,16 @@ public class StoreRestController {
     @GetMapping("read/{sno}")
     public StoreDTO getReadStore(@PathVariable("sno") Long sno) {
         log.info("RestController | Api Store Read");
+        storeService.checkStoreNumber(sno); // Check Store
         StoreDTO result = storeService.readStore(sno);
         return result;
     }
 
     // List Store And CategoryName Api
-//    @PreAuthorize("permitAll")
+    @PreAuthorize("permitAll")
     @GetMapping("list/{categoryName}")
-    public PageResponseDTO<StoreDTOForMember> getListStoreForCategoryName(@PathVariable("categoryName") String categoryName, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<StoreDTOForMember> getListStoreForCategoryName(
+            @PathVariable("categoryName") String categoryName, PageRequestDTO pageRequestDTO) {
         log.info("RestController | Api Store List For CategoryName");
         return storeService.listStoreForCategory(categoryName, pageRequestDTO);
     }

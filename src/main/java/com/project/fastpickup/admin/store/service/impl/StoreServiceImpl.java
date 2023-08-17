@@ -41,6 +41,7 @@ public class StoreServiceImpl implements StoreService {
     @Transactional(readOnly = true)
     public StoreDTO readStore(Long sno) {
         log.info("Is Running Read Store ServiceImpl");
+        checkStoreNumber(sno);  // Check Sno 
         return storeMapper.readStore(sno);
     }
 
@@ -49,7 +50,8 @@ public class StoreServiceImpl implements StoreService {
     @Transactional
     public void checkStoreNumber(Long sno) {
         log.info("Is Running Check Store Number");
-        if (storeMapper.duplicateSno(sno) == 0) {
+        Long result = storeMapper.duplicateSno(sno);
+        if (result == null || result == 0) {
             throw new StoreNotFoundException("찾으시는 가맹점이 없습니다.");
         }
     }

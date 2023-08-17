@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.project.fastpickup.admin.member.exception.CustomAuthenticationEntryPoint;
 import com.project.fastpickup.admin.member.security.filter.JWTCheckFilter;
 import com.project.fastpickup.admin.member.security.handler.APILoginSuccessHandler;
 import com.project.fastpickup.admin.member.security.handler.CustomAccessDeniedHandler;
@@ -39,6 +40,8 @@ import lombok.extern.log4j.Log4j2;
 public class CustomSecurityConfig {
 
     private final DataSource dataSource;
+
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     // TokenRepository에 토큰 값 저장 함수
     @Bean
@@ -62,6 +65,11 @@ public class CustomSecurityConfig {
             // 발행한 토큰 값 repository에 저장
             config.tokenRepository(persistentTokenRepository());
             config.tokenValiditySeconds(60 * 60 * 24 * 7); // 7 Days
+        });
+
+        // Exception 처리 
+        http.exceptionHandling(config -> {
+            config.authenticationEntryPoint(customAuthenticationEntryPoint);
         });
 
         // cors 설정

@@ -16,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,12 +32,14 @@ import com.project.fastpickup.admin.order.restcontroller.OrderRestController;
 import com.project.fastpickup.admin.product.restcontroller.ProductRestController;
 import com.project.fastpickup.admin.qna.restcontroller.QnaRestController;
 import com.project.fastpickup.admin.review.restcontroller.ReviewRestController;
+import com.project.fastpickup.admin.store.exception.StoreNotFoundException;
+import com.project.fastpickup.admin.store.restcontroller.StoreRestController;
 
 @RestControllerAdvice(assignableTypes = { ReviewRestController.class,
-		QnaRestController.class, ProductRestController.class, OrderRestController.class, MemberRestController.class })
-
+		QnaRestController.class, ProductRestController.class, OrderRestController.class, MemberRestController.class,
+		StoreRestController.class })
 public class AdviceController {
-	
+
 	/*
 	 * Time : Error 발생 시점
 	 * AdviceErrorStatus : Status
@@ -46,7 +49,7 @@ public class AdviceController {
 		Map<String, String> errorMap = new HashMap<>();
 		errorMap.put("time", "" + System.currentTimeMillis());
 		errorMap.put("status", String.valueOf(errorCode.getStatus()));
-		errorMap.put("message", errorCode.getMessage(ex));
+		errorMap.put("errorMsg", errorCode.getMessage(ex));
 		return errorMap;
 	}
 
@@ -177,7 +180,7 @@ public class AdviceController {
 		AdviceErrorCode adviceErrorCode = AdviceErrorCode.RESOURCE_NOT_FOUND;
 		return generateErrorEntity(adviceErrorCode, generateErrorMap(AdviceErrorCode.RESOURCE_NOT_FOUND, ex));
 	}
-	
+
 	// 처리할 예외: AccessDeniedException
 	// 발생 원인: 요청한 자원에 대한 권한이 없을 때
 	// HTTP 상태 코드: 403 (Forbidden)
@@ -185,5 +188,21 @@ public class AdviceController {
 	public ResponseEntity<Map<String, String>> handleAccessDeniedErr(AccessDeniedException ex) {
 		AdviceErrorCode adviceErrorCode = AdviceErrorCode.ACCESS_DENIED;
 		return generateErrorEntity(adviceErrorCode, generateErrorMap(AdviceErrorCode.ACCESS_DENIED, ex));
+	}
+
+	// 처리할 예외: AuthenticationException
+	// 발생 원인: Spring Security의 인증에 실패한 경우
+	// HTTP 상태 코드: 401 (Unauthorized)
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<Map<String, String>> handleAuthenticationErr(AuthenticationException ex) {
+		AdviceErrorCode adviceErrorCode = AdviceErrorCode.UNAUTHORIZED;
+		return generateErrorEntity(adviceErrorCode, generateErrorMap(adviceErrorCode, ex));
+	}
+
+	// 처리할 예외: StoreNotFoundException
+	@ExceptionHandler(StoreNotFoundException.class)
+	public ResponseEntity<Map<String, String>> handleStoreNotFoundErr(StoreNotFoundException ex) {
+		AdviceErrorCode adviceErrorCode = AdviceErrorCode.STORE_NOT_FOUND;
+		return generateErrorEntity(adviceErrorCode, generateErrorMap(adviceErrorCode, ex));
 	}
 }
