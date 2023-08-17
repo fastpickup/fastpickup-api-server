@@ -1,5 +1,11 @@
 package com.project.fastpickup.admin.qna.restcontroller;
 
+/*
+ * Date   : 2023.08.07
+ * Author : 송수정
+ * E-mail : sujung033131@gmail.com
+ */
+
 import com.project.fastpickup.admin.qna.dto.reply.QnaReplyReadDTO;
 import com.project.fastpickup.admin.qna.service.QnaReplyService;
 import lombok.RequiredArgsConstructor;

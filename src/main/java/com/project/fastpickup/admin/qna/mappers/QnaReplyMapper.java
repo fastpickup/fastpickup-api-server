@@ -6,6 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+/*
+ * Date   : 2023.08.07
+ * Author : 송수정
+ * E-mail : sujung033131@gmail.com
+ */
+
 @Mapper
 public interface QnaReplyMapper {
 
